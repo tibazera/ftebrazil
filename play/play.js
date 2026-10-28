@@ -31,8 +31,8 @@ window.Module = {
   print: console.log,
   printErr: console.error,
   setStatus(message) {
-    // O Emscripten chama setStatus('') quando todos os downloads terminam.
-    if (!message) return showGame();
+    // 'Running...' (e depois '') é o último status do Emscripten antes do jogo começar.
+    if (!message || message.startsWith('Running')) return showGame();
     status.textContent = message;
     const match = message.match(/\((\d+(?:\.\d+)?)\/(\d+)\)/);
     progress.hidden = !match;
