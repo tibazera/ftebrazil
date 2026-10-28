@@ -9,6 +9,20 @@ navegador ──wss:443──> Caddy ──ws──> fteqw-sv :27500/tcp
 desktop   ──────────udp 27500──────> fteqw-sv
 ```
 
+## Instalação automática
+
+Num Debian 12+ ou Ubuntu 22.04+ com o domínio já apontando para o IP:
+
+```bash
+git clone https://github.com/tibazera/ftebrazil.git
+cd ftebrazil/server
+sudo ./install.sh quake.seudominio.com.br
+```
+
+O script faz os passos abaixo: compila o `fteqw-sv`, baixa o shareware, cria o
+serviço `ftebrazil` no systemd e configura o Caddy. Os passos manuais seguem
+para referência.
+
 ## 1. VPS
 
 Qualquer Linux em São Paulo serve (Vultr, AWS `sa-east-1`, Oracle Cloud, Magalu
