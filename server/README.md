@@ -23,6 +23,18 @@ O script faz os passos abaixo: compila o `fteqw-sv`, baixa o shareware, cria o
 serviço `ftebrazil` no systemd e configura o Caddy. Os passos manuais seguem
 para referência.
 
+## Site no mesmo domínio
+
+Para servir também o site em `https://<dominio>` (em vez do GitHub Pages):
+
+```bash
+./deploy-site.sh quake.seudominio.com.br
+```
+
+Na primeira vez instala o Emscripten e compila o engine web (demora alguns
+minutos). Depois de cada `git pull`, rode de novo para atualizar o site. O nginx
+manda requisições de WebSocket para o `fteqw-sv` e o resto para os arquivos.
+
 ## 1. VPS
 
 Qualquer Linux em São Paulo serve (Vultr, AWS `sa-east-1`, Oracle Cloud, Magalu
