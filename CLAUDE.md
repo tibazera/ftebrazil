@@ -23,7 +23,7 @@ Esta é uma base estática, sem framework e sem dependências:
 - `docs/architecture.md`: arquitetura e fases do projeto;
 - `.github/workflows/pages.yml`: deploy estático no GitHub Pages.
 
-O deploy compila o engine e o manifesto baixa o Quake shareware. Sem servidor configurado, `play/` abre o mapa `start` local. Falta subir o servidor brasileiro e preencher `DEFAULT_SERVER` em `play/play.js`.
+O deploy compila o engine e o manifesto baixa o Quake shareware. Sem servidor configurado, `play/` abre o mapa `start` local. O servidor brasileiro roda em `wss://quake.qlash.com.br` (nginx + certbot na frente do `fteqw-sv`), já configurado em `DEFAULT_SERVER` no arquivo `play/play.js`.
 
 ## Primeira análise recomendada
 
