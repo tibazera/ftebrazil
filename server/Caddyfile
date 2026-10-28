@@ -1,0 +1,4 @@
+# Troque pelo domínio que aponta para o VPS. O Caddy emite o certificado sozinho.
+quake.example.com.br {
+	reverse_proxy 127.0.0.1:27500
+}

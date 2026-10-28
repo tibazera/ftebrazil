@@ -2,7 +2,12 @@ const canvas = document.querySelector('#canvas');
 const loader = document.querySelector('#loader');
 const status = document.querySelector('#status');
 const progress = document.querySelector('#progress');
-const playerName = new URLSearchParams(location.search).get('name')?.replace(/[^A-Za-z0-9 _.\[\]-]/g, '').trim().slice(0, 15);
+// Endereço do servidor brasileiro (wss://...). Vazio = mapa local para testar o engine.
+// Também aceita ?server=wss://... na URL para testes.
+const DEFAULT_SERVER = '';
+const params = new URLSearchParams(location.search);
+const server = (params.get('server') || DEFAULT_SERVER).trim();
+const playerName = params.get('name')?.replace(/[^A-Za-z0-9 _.\[\]-]/g, '').trim().slice(0, 15);
 
 window.Module = {
   canvas,
@@ -10,7 +15,13 @@ window.Module = {
     '-manifest', '../game/ftebrazil.fmf',
     '+set', 'vid_hardwaregamma', '2',
     '+set', 'gamma', '1.05',
+    '+bind', 'w', '+forward',
+    '+bind', 's', '+back',
+    '+bind', 'a', '+moveleft',
+    '+bind', 'd', '+moveright',
+    '+bind', 'mouse2', '+jump',
     ...(playerName ? ['+set', 'name', playerName] : []),
+    ...(/^wss?:\/\//.test(server) ? ['+connect', server] : ['+map', 'start']),
   ],
   print: console.log,
   printErr: console.error,

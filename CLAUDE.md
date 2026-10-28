@@ -18,11 +18,12 @@ Esta é uma base estática, sem framework e sem dependências:
 - `index.html`, `styles.css`, `app.js`: landing page e entrada do jogador;
 - `play/`: canvas e carregador do engine;
 - `game/ftebrazil.fmf`: manifesto inicial no formato usado pelo FTEQW;
-- `vendor/fte/`: local esperado para `ftewebgl.js` e `ftewebgl.wasm`;
+- `vendor/fte/`: `ftewebgl.js` e `ftewebgl.wasm`, gerados pelo workflow a partir de um commit fixo do FTEQW;
+- `server/`: `server.cfg`, `Caddyfile` e guia do servidor brasileiro;
 - `docs/architecture.md`: arquitetura e fases do projeto;
 - `.github/workflows/pages.yml`: deploy estático no GitHub Pages.
 
-O site ainda não é jogável. O carregador mostra uma mensagem clara enquanto os binários do engine não estiverem instalados.
+O deploy compila o engine e o manifesto baixa o Quake shareware. Sem servidor configurado, `play/` abre o mapa `start` local. Falta subir o servidor brasileiro e preencher `DEFAULT_SERVER` em `play/play.js`.
 
 ## Primeira análise recomendada
 

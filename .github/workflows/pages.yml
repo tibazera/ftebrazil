@@ -3,29 +3,81 @@ name: Deploy GitHub Pages
 on:
   push:
     branches: [main]
+  pull_request:
   workflow_dispatch:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 concurrency:
-  group: pages
+  group: pages-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  # Commit do fte-team/fteqw usado no build. Atualize de propósito, nunca "latest".
+  FTEQW_REF: f937b9d88f71fc4429db5fe56c6a98d922711b2e
+  # Mesma versão de Emscripten que o CI oficial do FTEQW usa para o target web.
+  EMSDK_VERSION: 2.0.12
+
 jobs:
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+  build-fte:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - name: Checkout FTEQW
+        uses: actions/checkout@v4
+        with:
+          repository: fte-team/fteqw
+          ref: ${{ env.FTEQW_REF }}
+          path: fteqw
+
+      - uses: mymindstorm/setup-emsdk@v14
+        with:
+          version: ${{ env.EMSDK_VERSION }}
+          actions-cache-folder: emsdk-cache-${{ env.EMSDK_VERSION }}
+
+      - name: Build FTEQW web
+        working-directory: fteqw/engine
+        run: |
+          make FTE_TARGET=web makelibs
+          make -j "$(nproc)" FTE_TARGET=web gl-rel
+
+      - name: Install engine in vendor/fte
+        run: |
+          cp fteqw/engine/release/ftewebgl.js fteqw/engine/release/ftewebgl.wasm vendor/fte/
+          cp fteqw/LICENSE vendor/fte/LICENSE-FTEQW.txt
+          cat > vendor/fte/SOURCE.txt <<SRC
+          ftewebgl.js / ftewebgl.wasm (GPL-2.0)
+          Fonte: https://github.com/fte-team/fteqw/tree/${FTEQW_REF}
+          Build: make FTE_TARGET=web makelibs && make FTE_TARGET=web gl-rel
+          Emscripten: ${EMSDK_VERSION}
+          SRC
+          rm -rf fteqw
+
+      - name: Check scripts
+        run: |
+          node --check app.js
+          node --check play/play.js
+
       - uses: actions/configure-pages@v5
+        if: github.event_name != 'pull_request'
+
       - uses: actions/upload-pages-artifact@v3
         with:
           path: .
+
+  deploy:
+    if: github.event_name != 'pull_request'
+    needs: build-fte
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
       - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v4

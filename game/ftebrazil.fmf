@@ -1,18 +1,8 @@
+FTEManifestVer 1
 game quake
 name "FTE Brazil"
-basegame id1
-basegame *fte
 
-bind w +forward
-bind s +back
-bind a +moveleft
-bind d +moveright
-bind mouse1 +attack
-bind mouse2 +jump
-bind tab +showscores
-bind t messagemode
-bind y messagemode2
-
-// Adicione aqui o pacote permitido e o servidor quando estiverem definidos.
-// package id1/pak0.pak - "https://SEU-CDN/pak0.pak"
-// connect "wss://SEU-SERVIDOR"
+// A licença shareware exige distribuição do pacote inteiro: o engine baixa o zip
+// oficial do episódio 1 e extrai só o pak0.pak (mesma linha do quake-demo.fmf do FTEQW).
+// Nada disso fica versionado neste repositório.
+archivedpackage id1/pak0.pak 0x4f069cac id1/pak0.pak https://fte.triptohell.info/moodles/live/QUAKE_SW.zip

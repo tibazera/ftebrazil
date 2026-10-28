@@ -27,17 +27,18 @@ index.html          landing page
 styles.css          identidade e layout
 app.js              entrada e persistência do nome
 play/               canvas e carregador do engine
-game/               manifesto e futura configuração do jogo
+game/               manifesto do jogo (conteúdo shareware)
+server/             configuração do servidor brasileiro e do proxy TLS
 vendor/fte/         binários WebAssembly não versionados nesta etapa
 docs/               decisões e próximos passos
 ```
 
 ## Para ficar jogável
 
-1. Gerar ou obter de fonte oficial o build WebAssembly do FTEQW.
-2. Definir conteúdo permitido: Quake shareware ou pacote livre compatível.
-3. Subir um servidor FTEQW brasileiro com WebSocket seguro ou WebRTC.
-4. Apontar o manifesto para os pacotes e para o servidor.
+1. **Engine:** o workflow do Pages compila o FTEQW web a partir de um commit fixo do repositório oficial ([`vendor/fte/README.md`](vendor/fte/README.md)).
+2. **Conteúdo:** o manifesto baixa o zip oficial do Quake shareware e usa só o `pak0.pak` (episódio 1).
+3. **Teste local:** sem servidor configurado, `play/` abre o mapa `start` localmente.
+4. **Servidor BR:** `fteqw-sv` com WebSocket atrás do Caddy (`wss://`), conforme [`server/README.md`](server/README.md). Depois, preencha `DEFAULT_SERVER` em `play/play.js` ou teste com `play/?server=wss://...`.
 
 O ranking, a lista de jogadores e as notificações dependem de um backend e entram depois da conexão básica funcionar.
 
