@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#07140e">
+  <meta name="description" content="Jogue QuakeWorld direto no navegador com a comunidade brasileira.">
+  <title>FTE Brazil — QuakeWorld no navegador</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+  <header class="topbar">
+    <a class="brand" href="./" aria-label="FTE Brazil, início">
+      <span class="brand-mark" aria-hidden="true">FTE</span>
+      <span>BRAZIL</span>
+    </a>
+    <nav aria-label="Principal">
+      <a href="#como-jogar">Como jogar</a>
+      <a href="#projeto">Projeto</a>
+      <a href="https://github.com/tibazera/ftebrazil">GitHub</a>
+    </nav>
+  </header>
+
+  <main id="conteudo">
+    <section class="hero" aria-labelledby="titulo">
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="status-dot"></span> servidor brasileiro em preparação</p>
+        <h1 id="titulo">A arena<br>voltou.</h1>
+        <p class="lead">QuakeWorld de verdade, direto no navegador. Sem instalar, sem enrolação — escolha seu nome e entre na partida.</p>
+
+        <form class="join" action="play/" method="get" data-join-form>
+          <label for="player-name">Seu nome na arena</label>
+          <div class="join-row">
+            <input id="player-name" name="name" type="text" maxlength="15" autocomplete="nickname" placeholder="PLAYER" pattern="[A-Za-z0-9 _.\[\]-]{1,15}" title="Use até 15 letras, números, espaços ou . _ [ ] -">
+            <button type="submit">Entrar no jogo <span aria-hidden="true">→</span></button>
+          </div>
+          <p class="field-note" data-form-note>Chrome, Edge ou Firefox recente · teclado e mouse recomendados</p>
+        </form>
+      </div>
+
+      <div class="terminal" aria-label="Prévia do servidor">
+        <div class="terminal-head"><span>FTEBRAZIL // CONSOLE</span><span>BR-SAO</span></div>
+        <div class="terminal-screen">
+          <p><span class="prompt">]</span> connect arena.ftebrazil</p>
+          <p class="muted">Resolving Brazilian relay...</p>
+          <p class="ok">Projeto iniciado. Servidor aguardando configuração.</p>
+          <div class="map-grid" aria-hidden="true">
+            <span></span><span></span><span></span><span></span><span></span><span></span>
+          </div>
+          <p class="cursor-line"><span class="prompt">]</span> <span class="cursor"></span></p>
+        </div>
+        <div class="terminal-foot"><span>F1 AJUDA</span><span>ESC MENU</span><span>ALT+ENTER TELA CHEIA</span></div>
+      </div>
+    </section>
+
+    <section class="steps" id="como-jogar" aria-labelledby="como-jogar-titulo">
+      <div>
+        <p class="eyebrow">Primeiro frag em menos de um minuto</p>
+        <h2 id="como-jogar-titulo">Como jogar</h2>
+      </div>
+      <ol>
+        <li><strong>Escolha seu nome</strong><span>Ele fica salvo neste navegador.</span></li>
+        <li><strong>Permita o mouse</strong><span>Clique na arena para mirar livremente.</span></li>
+        <li><strong>Entre no servidor</strong><span>O cliente conecta ao servidor brasileiro.</span></li>
+      </ol>
+    </section>
+
+    <section class="project" id="projeto" aria-labelledby="projeto-titulo">
+      <p class="eyebrow">Código aberto, comunidade aberta</p>
+      <h2 id="projeto-titulo">Preservar jogando.</h2>
+      <p>FTE Brazil é um projeto comunitário e não comercial, construído sobre o <a href="https://www.fteqw.org/">FTEQW</a>. Não é afiliado à id Software ou à ZeniMax Media.</p>
+      <a class="text-link" href="https://github.com/tibazera/ftebrazil">Acompanhar o desenvolvimento no GitHub →</a>
+    </section>
+  </main>
+
+  <footer>
+    <span>FTE BRAZIL · FEITO PELA COMUNIDADE</span>
+    <span>QUAKEWORLD DESDE 1996</span>
+  </footer>
+</body>
+</html>
