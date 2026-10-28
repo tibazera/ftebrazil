@@ -23,7 +23,9 @@ if [[ -z "$DOMAIN" ]]; then echo "Uso: sudo $0 <dominio apontando para este serv
 
 echo "==> Dependências"
 apt-get update -qq
-apt-get install -y -qq build-essential git curl unzip zlib1g-dev caddy
+apt-get install -y -qq build-essential git curl unzip zlib1g-dev
+# Se já existe um nginx na máquina, ele faz o proxy wss:// em vez do Caddy.
+if systemctl is-active --quiet nginx; then PROXY=nginx; else PROXY=caddy; apt-get install -y -qq caddy; fi
 
 echo "==> Usuário $QUAKE_USER"
 id "$QUAKE_USER" &>/dev/null || useradd --system --home "$QUAKE_HOME" --shell /usr/sbin/nologin "$QUAKE_USER"
@@ -86,11 +88,29 @@ ReadWritePaths=$QUAKE_HOME
 WantedBy=multi-user.target
 UNIT
 
+if [[ $PROXY == caddy ]]; then
 cat > /etc/caddy/Caddyfile <<CADDY
 $DOMAIN {
 	reverse_proxy 127.0.0.1:27500
 }
 CADDY
+elif [[ ! -f /etc/nginx/sites-available/ftebrazil ]]; then
+cat > /etc/nginx/sites-available/ftebrazil <<NGINX
+server {
+    listen 80;
+    server_name $DOMAIN;
+    location / {
+        proxy_pass http://127.0.0.1:27500;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade \$http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host \$host;
+        proxy_read_timeout 1h;
+    }
+}
+NGINX
+ln -sf /etc/nginx/sites-available/ftebrazil /etc/nginx/sites-enabled/ftebrazil
+fi
 
 echo "==> Firewall"
 if command -v ufw &>/dev/null && ufw status | grep -q active; then
@@ -100,7 +120,16 @@ fi
 systemctl daemon-reload
 systemctl enable --now ftebrazil
 systemctl restart ftebrazil
-systemctl reload caddy || systemctl restart caddy
+if [[ $PROXY == caddy ]]; then
+  systemctl reload caddy || systemctl restart caddy
+else
+  nginx -t && systemctl reload nginx
+  if command -v certbot &>/dev/null; then
+    certbot --nginx -n --agree-tos --register-unsafely-without-email -d "$DOMAIN" || true
+  else
+    echo "Instale o certbot (apt install python3-certbot-nginx) e rode: certbot --nginx -d $DOMAIN"
+  fi
+fi
 
 echo
 echo "Pronto. Navegador: wss://$DOMAIN  |  Desktop: connect $DOMAIN:27500"
