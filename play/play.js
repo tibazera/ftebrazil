@@ -9,6 +9,11 @@ const params = new URLSearchParams(location.search);
 const server = (params.get('server') || DEFAULT_SERVER).trim();
 const playerName = params.get('name')?.replace(/[^A-Za-z0-9 _.\[\]-]/g, '').trim().slice(0, 15);
 
+function showGame() {
+  loader.hidden = true;
+  canvas.focus();
+}
+
 window.Module = {
   canvas,
   arguments: [
@@ -26,16 +31,14 @@ window.Module = {
   print: console.log,
   printErr: console.error,
   setStatus(message) {
-    status.textContent = message || 'Entrando na arena…';
+    // O Emscripten chama setStatus('') quando todos os downloads terminam.
+    if (!message) return showGame();
+    status.textContent = message;
     const match = message.match(/\((\d+(?:\.\d+)?)\/(\d+)\)/);
     progress.hidden = !match;
     if (match) progress.value = Number(match[1]) / Number(match[2]) * 100;
   },
-  postRun: [() => {
-    loader.hidden = true;
-    canvas.style.display = 'block';
-    canvas.focus();
-  }],
+  postRun: [showGame],
 };
 
 const engine = document.createElement('script');
