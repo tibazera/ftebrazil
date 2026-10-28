@@ -44,7 +44,7 @@ sudo install -m755 release/fteqw-sv* /usr/local/bin/fteqw-sv
 ```bash
 mkdir -p ~/quake/id1
 # pak0.pak do Quake shareware (episódio 1), o mesmo que o cliente web baixa:
-# https://fte.triptohell.info/moodles/live/QUAKE_SW.zip
+# https://fte.triptohell.info/qsw106.zip
 cp server.cfg ~/quake/id1/
 cd ~/quake && fteqw-sv -basedir ~/quake +exec server.cfg
 ```

@@ -3,6 +3,6 @@ game quake
 name "FTE Brazil"
 
 // A licença shareware exige distribuição do pacote inteiro: o engine baixa o zip
-// oficial do episódio 1 e extrai só o pak0.pak (mesma linha do quake-demo.fmf do FTEQW).
+// oficial do episódio 1 e extrai só o pak0.pak (mesma linha do ktx.fmf do FTEQW).
 // Nada disso fica versionado neste repositório.
-archivedpackage id1/pak0.pak 0x4f069cac id1/pak0.pak https://fte.triptohell.info/moodles/live/QUAKE_SW.zip
+archivedpackage id1/pak0.pak 0x4f069cac id1/pak0.pak https://fte.triptohell.info/qsw106.zip

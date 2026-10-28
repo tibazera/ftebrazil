@@ -8,7 +8,12 @@ set -euo pipefail
 
 DOMAIN="${1:-}"
 FTEQW_REF="${FTEQW_REF:-f937b9d88f71fc4429db5fe56c6a98d922711b2e}"
-SHAREWARE_URL="https://fte.triptohell.info/moodles/live/QUAKE_SW.zip"
+# Mirrors do Quake shareware (zip inteiro, como a licença exige). Para usar um
+# pak0.pak que você já tem: PAK0=/caminho/pak0.pak ./install.sh <dominio>
+SHAREWARE_URLS=(
+  "https://fte.triptohell.info/qsw106.zip"
+  "https://fte.triptohell.info/moodles/live/QUAKE_SW.zip"
+)
 QUAKE_USER="quake"
 QUAKE_HOME="/opt/ftebrazil"
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
@@ -24,20 +29,36 @@ echo "==> Usuário $QUAKE_USER"
 id "$QUAKE_USER" &>/dev/null || useradd --system --home "$QUAKE_HOME" --shell /usr/sbin/nologin "$QUAKE_USER"
 mkdir -p "$QUAKE_HOME/id1"
 
-echo "==> Compilando fteqw-sv ($FTEQW_REF)"
 BUILD_DIR="$(mktemp -d)"
 trap 'rm -rf "$BUILD_DIR"' EXIT
+if [[ -x /usr/local/bin/fteqw-sv && -z "${REBUILD:-}" ]]; then
+  echo "==> fteqw-sv já instalado (REBUILD=1 para recompilar)"
+else
+echo "==> Compilando fteqw-sv ($FTEQW_REF)"
 git clone -q https://github.com/fte-team/fteqw.git "$BUILD_DIR/fteqw"
 git -C "$BUILD_DIR/fteqw" checkout -q "$FTEQW_REF"
 make -C "$BUILD_DIR/fteqw/engine" -j"$(nproc)" sv-rel
 install -m755 "$(ls "$BUILD_DIR"/fteqw/engine/release/fteqw-sv* | head -n1)" /usr/local/bin/fteqw-sv
+fi
 
 echo "==> Quake shareware"
-if [[ ! -f "$QUAKE_HOME/id1/pak0.pak" ]]; then
-  curl -fsSL -o "$BUILD_DIR/quake_sw.zip" "$SHAREWARE_URL"
-  unzip -q "$BUILD_DIR/quake_sw.zip" -d "$BUILD_DIR/sw"
-  PAK="$(find "$BUILD_DIR/sw" -iname pak0.pak | head -n1)"
-  [[ -n "$PAK" ]] || { echo "pak0.pak não encontrado no zip" >&2; exit 1; }
+if [[ -n "${PAK0:-}" ]]; then
+  install -m644 "$PAK0" "$QUAKE_HOME/id1/pak0.pak"
+elif [[ ! -f "$QUAKE_HOME/id1/pak0.pak" ]]; then
+  PAK=""
+  for url in "${SHAREWARE_URLS[@]}"; do
+    echo "    tentando $url"
+    rm -rf "$BUILD_DIR/sw" "$BUILD_DIR/quake_sw.zip"
+    curl -fsSL -o "$BUILD_DIR/quake_sw.zip" "$url" || continue
+    unzip -q "$BUILD_DIR/quake_sw.zip" -d "$BUILD_DIR/sw" || continue
+    PAK="$(find "$BUILD_DIR/sw" -iname pak0.pak | head -n1)"
+    [[ -n "$PAK" ]] && break
+  done
+  if [[ -z "$PAK" ]]; then
+    echo "Não consegui baixar o pak0.pak. Copie um para o servidor e rode:" >&2
+    echo "  PAK0=/caminho/pak0.pak $0 $DOMAIN" >&2
+    exit 1
+  fi
   install -m644 "$PAK" "$QUAKE_HOME/id1/pak0.pak"
 fi
 
