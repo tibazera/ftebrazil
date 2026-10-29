@@ -137,30 +137,35 @@ def read_status():
     return players
 
 
-def userinfo_token(userid):
+def read_userinfo(userid):
+    """Userinfo de um jogador via rcon "user", como dicionário."""
+    info = {}
     for line in rcon(f"user {userid}").splitlines():
         parts = COLOR_RE.sub("", line).split(None, 1)
-        if parts and parts[0] == "_ftb":
-            return parts[1].strip() if len(parts) > 1 else ""
-    return ""
+        if parts:
+            info[parts[0]] = parts[1].strip() if len(parts) > 1 else ""
+    return info
 
 
 def enforce_nick(player):
-    """Expulsa quem usa nick registrado sem o token certo."""
+    """Na primeira vez que vê um jogador: barra quem veio do modo assistir e quem usa
+    nick registrado sem o token certo."""
     key = nick_key(player["name"])
-    if verified.get(player["userid"]) == key:
+    if verified.get(player["userid"]) == key or not RCON_PASSWORD:
+        return
+    info = read_userinfo(player["userid"])
+    if not info:
+        return  # rcon sem resposta: tenta de novo na próxima leitura
+    if info.get("_watch") == "1":
+        # Espectador da janela "Assistir" que tentou entrar na partida ("join").
+        rcon(f"kick {player['userid']} O modo assistir e so para assistir. Entre pelo botao Entrar no jogo.")
         return
     with db_lock:
         registered = db.execute("SELECT 1 FROM accounts WHERE key = ?", (key,)).fetchone()
-    if not registered:
-        verified[player["userid"]] = key
-        return
-    if not RCON_PASSWORD:
-        return
-    if hmac.compare_digest(userinfo_token(player["userid"]), token_for(key)):
-        verified[player["userid"]] = key
-    else:
+    if registered and not hmac.compare_digest(info.get("_ftb", ""), token_for(key)):
         rcon(f"kick {player['userid']} Nick registrado. Entre pelo site com sua senha.")
+        return
+    verified[player["userid"]] = key
 
 
 def load_maplist():

@@ -69,7 +69,12 @@ window.Module = {
     ...(playerName ? ['+set', 'name', playerName] : []),
     // Espectador: entra no servidor só para assistir (não ocupa vaga nem conta no ranking).
     '+setinfo', 'spectator', spectate ? '1' : '0',
-    ...(spectate ? ['+set', 'cl_autotrack', 'high'] : []),
+    // Modo assistir é só para assistir: "join" desativado aqui e, se mesmo assim
+    // alguém entrar na partida, o servidor expulsa quem tiver _watch 1.
+    ...(spectate ? ['+set', 'cl_autotrack', 'high', '+setinfo', '_watch', '1',
+      '+alias', 'join', 'echo Modo assistir: use Entrar no jogo no site para jogar']
+      // O FTE pode guardar a config no navegador: no modo jogar, desfaz o modo assistir.
+      : ['+setinfo', '_watch', '0', '+alias', 'join', 'cmd join']),
     ...(embed ? ['+set', 'volume', '0', '+set', 'scr_centertime', '0'] : []),
     // Chave com "_" fica só no servidor; o serviço de ranking confere o token do nick registrado.
     // Só o servidor oficial recebe a chave: um ?server= de terceiros não pode capturá-la.

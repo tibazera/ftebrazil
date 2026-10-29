@@ -20,6 +20,9 @@ Todas as mudanças relevantes do FTE Brazil. Formato baseado em
   "So Paulo" no hub, porque a fonte do Quake não tem acentos).
 
 ### Corrigido
+- Modo assistir é só para assistir: o comando `join` fica desativado nele, e quem
+  ainda assim entrar na partida vindo da janela de assistir (`_watch 1`) é expulso
+  pelo `ftebrazil-stats`.
 - QTV e WebQTV no hub.quakeworld.nu: o `fteqw-sv` bloqueava streams
   (`qtv_maxstreams 0`); agora aceita até 16, e o `ftebrazil-stats` mantém um stream
   local anunciando `1@<domínio>:27500`, que é o que o hub usa para mostrar os botões
