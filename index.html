@@ -6,9 +6,9 @@
   <meta name="theme-color" content="#07140e">
   <meta name="description" content="Jogue QuakeWorld direto no navegador com a comunidade brasileira.">
   <title data-i18n="meta.title">FTE Brazil — QuakeWorld no navegador</title>
-  <link rel="stylesheet" href="styles.css?v=18">
-  <script src="i18n.js?v=18" defer></script>
-  <script src="app.js?v=18" defer></script>
+  <link rel="stylesheet" href="styles.css?v=19">
+  <script src="i18n.js?v=19" defer></script>
+  <script src="app.js?v=19" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#conteudo" data-i18n="skip">Pular para o conteúdo</a>
@@ -69,7 +69,10 @@
         <ol class="live-list" data-live-list>
           <li class="live-empty" data-i18n="live.loading">Carregando…</li>
         </ol>
-        <a class="live-watch" href="play/?spectate=1" data-i18n="live.watch">▶ Assistir agora</a>
+        <div class="live-screen" data-live-screen>
+          <button type="button" class="live-play" data-live-play data-i18n="live.play">▶ Assistir aqui</button>
+        </div>
+        <a class="live-watch" href="play/?spectate=1" data-i18n="live.watch">⛶ Assistir em tela cheia</a>
       </section>
       <section class="terminal ranking" id="ranking" aria-labelledby="ranking-titulo">
         <div class="terminal-head"><h2 id="ranking-titulo">RANKING // FRAGS</h2><span>BR-SAO</span></div>

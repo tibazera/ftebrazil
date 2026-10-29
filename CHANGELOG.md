@@ -6,6 +6,9 @@ Todas as mudanças relevantes do FTE Brazil. Formato baseado em
 ## [Não lançado]
 
 ### Adicionado
+- Transmissão ao vivo na página inicial (como no hub.quakeworld.nu): "Assistir aqui"
+  abre o jogo dentro da janela "Ao vivo" como espectador, com a câmera seguindo o
+  líder (`cl_autotrack high`) e sem som; o engine só carrega quando a pessoa clica.
 - Janela "Ao vivo" na página inicial: mapa atual e quem está jogando agora
   (nick, frags e ping), atualizada a cada 5 segundos, com botão para assistir.
 - Login lembrado: depois de entrar com nick e senha, o site mostra "Conectado como

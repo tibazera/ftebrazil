@@ -187,6 +187,15 @@ function renderLive(players, map) {
   }
 }
 
+// Transmissão: só carrega o engine quando a pessoa pede (são ~6 MB + mapa).
+document.querySelector('[data-live-play]').addEventListener('click', () => {
+  const frame = document.createElement('iframe');
+  frame.src = 'play/?embed=1';
+  frame.title = 'QuakeWorld ao vivo';
+  frame.allow = 'autoplay; fullscreen; pointer-lock';
+  document.querySelector('[data-live-screen]').replaceChildren(frame);
+});
+
 async function loadOnline() {
   try {
     const response = await fetch('api/online');

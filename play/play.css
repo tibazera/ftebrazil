@@ -15,3 +15,7 @@ code { color: #f2c84b; }
 progress { width: min(360px, 80vw); accent-color: #69f094; }
 @keyframes spin { to { transform: rotate(360deg); } }
 @media (prefers-reduced-motion: reduce) { .spinner { animation: none; } }
+
+/* Transmissão embutida na página inicial: só a tela do jogo. */
+.embed .back, .embed .help { display: none; }
+.embed h1 { font-size: 1.6rem; }

@@ -6,7 +6,9 @@ const progress = document.querySelector('#progress');
 // Também aceita ?server=wss://... na URL para testes.
 const DEFAULT_SERVER = 'wss://quake.qlash.com.br';
 const params = new URLSearchParams(location.search);
-const spectate = params.get('spectate') === '1';
+// embed=1: transmissão dentro da página inicial (espectador seguindo o líder, sem som).
+const embed = params.get('embed') === '1';
+const spectate = embed || params.get('spectate') === '1';
 const server = (params.get('server') || DEFAULT_SERVER).trim();
 const storage = key => { try { return localStorage.getItem(key) || ''; } catch { return ''; } };
 const token = storage('ftebrazil_token');
@@ -14,6 +16,7 @@ const token = storage('ftebrazil_token');
 const playerName = storage('ftebrazil_player_name').replace(/[^A-Za-z0-9 _.\[\]-]/g, '').trim().slice(0, 15);
 
 const exitLink = document.querySelector('#exit');
+document.body.classList.toggle('embed', embed);
 
 function showGame() {
   loader.hidden = true;
@@ -44,7 +47,7 @@ canvas.addEventListener('webglcontextlost', () => showProblem('play.gpu_lost'));
 
 // Com o mouse preso no jogo o botão some; ESC solta o mouse e o botão volta.
 function syncExit() {
-  exitLink.hidden = !loader.hidden || document.pointerLockElement === canvas;
+  exitLink.hidden = embed || !loader.hidden || document.pointerLockElement === canvas;
 }
 document.addEventListener('pointerlockchange', syncExit);
 
@@ -66,6 +69,8 @@ window.Module = {
     ...(playerName ? ['+set', 'name', playerName] : []),
     // Espectador: entra no servidor só para assistir (não ocupa vaga nem conta no ranking).
     '+setinfo', 'spectator', spectate ? '1' : '0',
+    ...(spectate ? ['+set', 'cl_autotrack', 'high'] : []),
+    ...(embed ? ['+set', 'volume', '0', '+set', 'scr_centertime', '0'] : []),
     // Chave com "_" fica só no servidor; o serviço de ranking confere o token do nick registrado.
     // Só o servidor oficial recebe a chave: um ?server= de terceiros não pode capturá-la.
     ...(/^[0-9a-f]{24}$/.test(token) && server === DEFAULT_SERVER ? ['+setinfo', '_ftb', token] : []),
