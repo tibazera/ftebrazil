@@ -15,7 +15,9 @@ const exitLink = document.querySelector('#exit');
 
 function showGame() {
   loader.hidden = true;
-  canvas.focus();
+  // O FTE escuta teclas no document e no canvas: se o canvas tiver foco, cada tecla
+  // chega duas vezes. Sem tabindex o canvas não recebe foco e o document trata sozinho.
+  document.activeElement?.blur();
   syncExit();
 }
 
