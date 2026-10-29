@@ -6,8 +6,8 @@
   <meta name="theme-color" content="#07140e">
   <meta name="description" content="Jogue QuakeWorld direto no navegador com a comunidade brasileira.">
   <title>FTE Brazil — QuakeWorld no navegador</title>
-  <link rel="stylesheet" href="styles.css?v=10">
-  <script src="app.js?v=10" defer></script>
+  <link rel="stylesheet" href="styles.css?v=11">
+  <script src="app.js?v=11" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
@@ -37,6 +37,15 @@
           <div class="join-row">
             <input id="player-name" name="name" type="text" maxlength="15" autocomplete="username" placeholder="PLAYER" pattern="[A-Za-z0-9 _.\[\]-]{1,15}" title="Use até 15 letras, números, espaços ou . _ [ ] -">
             <button type="submit">Entrar no jogo <span aria-hidden="true">→</span></button>
+          </div>
+          <div class="nick-editor">
+            <p class="nick-preview" data-nick-preview aria-label="Prévia do nick no jogo"></p>
+            <div class="nick-tools">
+              <button type="button" data-paint="1">Colorir tudo</button>
+              <button type="button" data-paint="0">Tirar cores</button>
+              <button type="button" data-wrap>[ ] dourado</button>
+            </div>
+            <p class="field-note">Clique numa letra da prévia para colorir. Números e colchetes também ficam dourados.</p>
           </div>
           <label for="player-password" class="secondary-label">Senha <span>(opcional, protege seu nick no ranking)</span></label>
           <input id="player-password" type="password" maxlength="128" autocomplete="current-password" placeholder="••••••">

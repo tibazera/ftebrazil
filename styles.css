@@ -49,6 +49,17 @@ input:focus-visible, button:focus-visible, a:focus-visible { outline: 3px solid 
 .field-note { color: var(--muted); font-size: .66rem; line-height: 1.5; }
 .field-note.error { color: var(--red); }
 .join .secondary-label { margin-top: 1rem; }
+#player-name { text-transform: none; }
+.nick-editor { margin-top: .8rem; padding: .8rem; border: 1px dashed var(--line); background: #050c08; }
+.nick-preview { display: flex; flex-wrap: wrap; min-height: 2.2rem; margin: 0 0 .6rem; }
+.nick-preview:empty::before { content: "Digite seu nick para personalizar"; color: var(--muted); font-size: .72rem; }
+.nick-preview button { min-height: 2.2rem; min-width: 1.4rem; padding: 0 .1rem; border: 0; background: transparent; color: var(--ink); font-size: 1.25rem; text-transform: none; }
+.nick-preview button:hover { background: #12291b; }
+.nick-preview .q-red { color: #c9873a; }
+.nick-preview .q-gold { color: var(--yellow); text-shadow: 0 0 6px rgba(242, 200, 75, .5); }
+.nick-tools { display: flex; flex-wrap: wrap; gap: .4rem; }
+.nick-tools button { min-height: 32px; padding: 0 .7rem; background: transparent; color: var(--muted); font-size: .68rem; }
+.nick-tools button:hover { background: #12291b; color: var(--ink); }
 .secondary-label span { color: var(--muted); font-weight: 400; text-transform: none; }
 #player-password { width: 100%; text-transform: none; }
 .check { display: flex !important; align-items: center; gap: .5rem; margin-top: .7rem; color: var(--muted) !important; font-weight: 400 !important; text-transform: none !important; cursor: pointer; }

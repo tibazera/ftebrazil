@@ -54,9 +54,30 @@ last_frags = {}      # userid -> frags na última leitura
 verified = {}        # userid -> nick já conferido
 
 
+def plain_char(c):
+    """Caractere do Quake (colorido, dourado ou U+E0xx do FTE) -> ASCII simples."""
+    code = ord(c)
+    if 0xE000 <= code <= 0xE0FF:
+        code &= 0xFF
+    if code > 0xFF:
+        return c
+    code &= 0x7F
+    if code == 0x10:
+        return "["
+    if code == 0x11:
+        return "]"
+    if 0x12 <= code <= 0x1B:
+        return chr(ord("0") + code - 0x12)
+    return chr(code) if code >= 0x20 else ""
+
+
+def plain_name(name):
+    return "".join(plain_char(c) for c in name).strip()
+
+
 def nick_key(name):
-    """Nome do Quake (pode ter bit alto colorido) -> chave estável."""
-    return "".join(chr(ord(c) & 0x7F) for c in name).strip().lower()
+    """Nome do Quake -> chave estável (sem cor, sem caixa)."""
+    return plain_name(name).lower()
 
 
 def token_for(key):
@@ -80,7 +101,11 @@ def udp(payload, timeout=1.0):
                 s.settimeout(0.2)
         except socket.timeout:
             pass
-    return b"".join(chunks).decode("latin-1")
+    data = b"".join(chunks)
+    try:
+        return data.decode("utf-8")  # FTE manda nomes em UTF-8 (cores em U+E0xx)
+    except UnicodeDecodeError:
+        return data.decode("latin-1")  # clientes antigos: bit alto = colorido
 
 
 def rcon(command):
@@ -100,7 +125,7 @@ def read_status():
         if frags <= -9999 or name.startswith(("\\s\\", "BOT:")):
             continue  # espectador ou bot
         players.append({"userid": int(userid), "frags": frags, "minutes": int(minutes),
-                        "ping": int(ping), "name": "".join(chr(ord(c) & 0x7F) for c in name)})
+                        "ping": int(ping), "name": plain_name(name)})
     return players
 
 

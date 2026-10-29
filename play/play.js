@@ -9,7 +9,7 @@ const params = new URLSearchParams(location.search);
 const server = (params.get('server') || DEFAULT_SERVER).trim();
 let token = '';
 try { token = localStorage.getItem('ftebrazil_token') || ''; } catch {}
-const playerName = params.get('name')?.replace(/[^A-Za-z0-9 _.\[\]-]/g, '').trim().slice(0, 15);
+const playerName = params.get('name')?.replace(/[^A-Za-z0-9 _.\[\]\-\ue000-\ue0ff]/g, '').trim().slice(0, 15);
 
 const exitLink = document.querySelector('#exit');
 

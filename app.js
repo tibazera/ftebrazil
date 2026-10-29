@@ -5,6 +5,7 @@ const registerBox = document.querySelector('[data-register]');
 const note = document.querySelector('[data-form-note]');
 const rankingList = document.querySelector('[data-ranking]');
 const onlineLabel = document.querySelector('[data-online]');
+const preview = document.querySelector('[data-nick-preview]');
 
 const cleanPlayerName = value => value.replace(/[^A-Za-z0-9 _.\[\]-]/g, '').trim().slice(0, 15);
 
@@ -14,6 +15,56 @@ const store = {
 };
 
 nameInput.value = store.get('ftebrazil_player_name');
+
+// Estilo de cada letra do nick: 0 normal, 1 colorida (bit alto do Quake), 2 dourada.
+// O FTE recebe o caractere do Quake N como U+E000+N.
+let styles = [...store.get('ftebrazil_player_styles')].map(Number);
+const canBeGold = ch => /[0-9\[\]]/.test(ch);
+
+function quakeChar(ch, style) {
+  if (style === 2 && canBeGold(ch)) {
+    const code = ch === '[' ? 0x10 : ch === ']' ? 0x11 : 0x12 + Number(ch);
+    return String.fromCharCode(0xe000 + code);
+  }
+  if (style === 1 && ch !== ' ') return String.fromCharCode(0xe080 + ch.charCodeAt(0));
+  return ch;
+}
+
+const quakeName = name => [...name].map((ch, i) => quakeChar(ch, styles[i] || 0)).join('');
+
+function renderPreview() {
+  const name = cleanPlayerName(nameInput.value);
+  styles = [...name].map((ch, i) => (styles[i] === 2 && !canBeGold(ch) ? 1 : styles[i] || 0));
+  preview.replaceChildren(...[...name].map((ch, i) => {
+    const letter = document.createElement('button');
+    letter.type = 'button';
+    letter.textContent = ch === ' ' ? '\u00a0' : ch;
+    letter.className = ['', 'q-red', 'q-gold'][styles[i]];
+    letter.title = 'Clique para mudar a cor';
+    letter.addEventListener('click', () => {
+      const max = canBeGold(ch) ? 3 : 2;
+      styles[i] = (styles[i] + 1) % max;
+      renderPreview();
+    });
+    return letter;
+  }));
+}
+
+nameInput.addEventListener('input', renderPreview);
+for (const button of document.querySelectorAll('[data-paint]')) {
+  button.addEventListener('click', () => {
+    styles = styles.map(() => Number(button.dataset.paint));
+    renderPreview();
+  });
+}
+document.querySelector('[data-wrap]').addEventListener('click', () => {
+  const name = cleanPlayerName(nameInput.value).replace(/^\[|\]$/g, '').slice(0, 13);
+  const inner = styles.slice(nameInput.value.startsWith('[') ? 1 : 0);
+  nameInput.value = `[${name}]`;
+  styles = [2, ...inner.slice(0, name.length), 2];
+  renderPreview();
+});
+renderPreview();
 
 function showError(message) {
   note.textContent = message;
@@ -68,7 +119,8 @@ form.addEventListener('submit', async event => {
   }
 
   store.set('ftebrazil_player_name', name);
-  location.href = `play/${name ? `?name=${encodeURIComponent(name)}` : ''}`;
+  store.set('ftebrazil_player_styles', styles.join(''));
+  location.href = `play/${name ? `?name=${encodeURIComponent(quakeName(name))}` : ''}`;
 });
 
 function renderRanking(players) {
