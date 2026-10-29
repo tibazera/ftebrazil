@@ -80,7 +80,7 @@ async function nickAllowed() {
 const engine = document.createElement('script');
 engine.src = '../vendor/fte/ftewebgl.js';
 engine.onerror = () => {
-  status.textContent = 'Cliente FTEQW ainda não instalado.';
+  status.textContent = t('play.missing');
   document.querySelector('.spinner').hidden = true;
 };
 nickAllowed().then(allowed => {

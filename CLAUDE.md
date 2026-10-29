@@ -51,6 +51,11 @@ landing -> loader -> engine -> mapa local -> servidor brasileiro
 - Não adicionar framework ou dependência enquanto HTML, CSS e JavaScript nativos forem suficientes.
 - Manter o site funcional em GitHub Pages, incluindo caminhos relativos ao subdiretório `/ftebrazil/`.
 
+## Fluxo de trabalho
+
+- Commits vão direto na `main`.
+- Toda mudança visível entra no `CHANGELOG.md`, na seção `[Não lançado]`.
+
 ## Como validar
 
 ```powershell

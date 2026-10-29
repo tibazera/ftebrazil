@@ -5,45 +5,51 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#07140e">
   <meta name="description" content="Jogue QuakeWorld direto no navegador com a comunidade brasileira.">
-  <title>FTE Brazil — QuakeWorld no navegador</title>
-  <link rel="stylesheet" href="styles.css?v=14">
-  <script src="app.js?v=14" defer></script>
+  <title data-i18n="meta.title">FTE Brazil — QuakeWorld no navegador</title>
+  <link rel="stylesheet" href="styles.css?v=15">
+  <script src="i18n.js?v=15" defer></script>
+  <script src="app.js?v=15" defer></script>
 </head>
 <body>
-  <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+  <a class="skip-link" href="#conteudo" data-i18n="skip">Pular para o conteúdo</a>
   <header class="topbar">
     <a class="brand" href="./" aria-label="FTE Brazil, início">
       <span class="brand-mark" aria-hidden="true">FTE</span>
       <span>BRAZIL</span>
     </a>
     <nav aria-label="Principal">
-      <a href="#ranking">Ranking</a>
-      <a href="#como-jogar">Como jogar</a>
-      <a href="#reportar">Reportar</a>
-      <a href="#projeto">Projeto</a>
+      <a href="#ranking" data-i18n="nav.ranking">Ranking</a>
+      <a href="#como-jogar" data-i18n="nav.how">Como jogar</a>
+      <a href="#reportar" data-i18n="nav.report">Reportar</a>
+      <a href="#projeto" data-i18n="nav.project">Projeto</a>
       <a href="https://github.com/tibazera/ftebrazil">GitHub</a>
       <a class="nav-discord" href="https://discord.gg/nsXpHe2ef9" target="_blank" rel="noopener">Discord</a>
+      <span class="lang-switch" role="group" aria-label="Idioma / Language">
+        <button type="button" data-lang="pt" aria-pressed="true">PT</button>
+        <button type="button" data-lang="en" aria-pressed="false">EN</button>
+        <button type="button" data-lang="es" aria-pressed="false">ES</button>
+      </span>
     </nav>
   </header>
 
   <main id="conteudo">
     <section class="hero" aria-labelledby="titulo">
       <div class="hero-copy">
-        <p class="eyebrow"><span class="status-dot"></span> <span data-online>servidor brasileiro · São Paulo</span></p>
-        <h1 id="titulo">A arena<br>voltou.</h1>
-        <p class="lead">QuakeWorld de verdade, direto no navegador. Sem instalar, sem enrolação — escolha seu nome e entre na partida.</p>
+        <p class="eyebrow"><span class="status-dot"></span> <span data-online data-i18n="hero.server">servidor brasileiro · São Paulo</span></p>
+        <h1 id="titulo" data-i18n="hero.title">A arena<br>voltou.</h1>
+        <p class="lead" data-i18n="hero.lead">QuakeWorld de verdade, direto no navegador. Sem instalar, sem enrolação — escolha seu nome e entre na partida.</p>
 
         <form class="join" action="play/" method="get" data-join-form>
-          <label for="player-name">Seu nome na arena</label>
+          <label for="player-name" data-i18n="join.name">Seu nome na arena</label>
           <div class="join-row">
-            <input id="player-name" name="name" type="text" maxlength="15" autocomplete="username" placeholder="PLAYER" pattern="[A-Za-z0-9 _.\[\]-]{1,15}" title="Use até 15 letras, números, espaços ou . _ [ ] -">
-            <button type="submit">Entrar no jogo <span aria-hidden="true">→</span></button>
+            <input id="player-name" name="name" type="text" maxlength="15" autocomplete="username" placeholder="PLAYER" pattern="[A-Za-z0-9 _.\[\]-]{1,15}" data-i18n-title="join.name.title" title="Use até 15 letras, números, espaços ou . _ [ ] -">
+            <button type="submit" data-i18n="join.play">Entrar no jogo <span aria-hidden="true">→</span></button>
           </div>
-          <label for="player-password" class="secondary-label">Senha <span>(opcional, protege seu nick no ranking)</span></label>
+          <label for="player-password" class="secondary-label" data-i18n="join.password">Senha <span>(opcional, protege seu nick no ranking)</span></label>
           <input id="player-password" type="password" maxlength="128" autocomplete="current-password" placeholder="••••••">
-          <label class="check"><input type="checkbox" data-register> Registrar este nick agora</label>
-          <a class="watch-link" href="play/?spectate=1">▶ Assistir ao vivo <span>sem entrar na partida</span></a>
-          <a class="discord-banner" href="https://discord.gg/nsXpHe2ef9" target="_blank" rel="noopener">
+          <label class="check"><input type="checkbox" data-register> <span data-i18n="join.register">Registrar este nick agora</span></label>
+          <a class="watch-link" href="play/?spectate=1" data-i18n="join.watch">▶ Assistir ao vivo <span>sem entrar na partida</span></a>
+          <a class="discord-banner" href="https://discord.gg/nsXpHe2ef9" target="_blank" rel="noopener" data-i18n="join.discord">
             <strong>Comunidade Sul-Americana de QuakeWorld</strong>
             <span>Bem-vindo! Aprenda mais e jogue competitivo no nosso Discord →</span>
           </a>
@@ -53,78 +59,78 @@
 
       <section class="terminal ranking" id="ranking" aria-labelledby="ranking-titulo">
         <div class="terminal-head"><h2 id="ranking-titulo">RANKING // FRAGS</h2><span>BR-SAO</span></div>
-        <div class="tabs" role="group" aria-label="Período">
-          <button type="button" data-period="day">Hoje</button>
-          <button type="button" data-period="week" aria-pressed="true">Semana</button>
-          <button type="button" data-period="all">Geral</button>
+        <div class="tabs" role="group" aria-label="Período" data-i18n-aria-label="rank.period">
+          <button type="button" data-period="day" data-i18n="rank.day">Hoje</button>
+          <button type="button" data-period="week" aria-pressed="true" data-i18n="rank.week">Semana</button>
+          <button type="button" data-period="all" data-i18n="rank.all">Geral</button>
         </div>
         <ol class="ranking-list" data-ranking>
-          <li class="ranking-empty">Carregando…</li>
+          <li class="ranking-empty" data-i18n="rank.loading">Carregando…</li>
         </ol>
-        <div class="terminal-foot"><span>✓ NICK REGISTRADO</span><span>TOP 20</span></div>
+        <div class="terminal-foot"><span data-i18n="rank.registered">✓ NICK REGISTRADO</span><span>TOP 20</span></div>
       </section>
     </section>
 
     <section class="community" id="comunidade" aria-labelledby="comunidade-titulo">
       <div>
-        <p class="eyebrow">Comunidade Sul-Americana de QuakeWorld</p>
-        <h2 id="comunidade-titulo">Bem-vindo ao Discord.</h2>
+        <p class="eyebrow" data-i18n="community.eyebrow">Comunidade Sul-Americana de QuakeWorld</p>
+        <h2 id="comunidade-titulo" data-i18n="community.title">Bem-vindo ao Discord.</h2>
       </div>
       <div>
-        <p>Você é bem-vindo ao Discord da comunidade Sul-Americana de QuakeWorld. Se quiser aprender mais, achar parceiros e jogar competitivo, é lá que a galera se encontra.</p>
-        <a class="discord-button" href="https://discord.gg/nsXpHe2ef9" target="_blank" rel="noopener">Entrar no Discord <span aria-hidden="true">→</span></a>
+        <p data-i18n="community.text">Você é bem-vindo ao Discord da comunidade Sul-Americana de QuakeWorld. Se quiser aprender mais, achar parceiros e jogar competitivo, é lá que a galera se encontra.</p>
+        <a class="discord-button" href="https://discord.gg/nsXpHe2ef9" target="_blank" rel="noopener" data-i18n="community.button">Entrar no Discord <span aria-hidden="true">→</span></a>
       </div>
     </section>
 
     <section class="steps" id="como-jogar" aria-labelledby="como-jogar-titulo">
       <div>
-        <p class="eyebrow">Primeiro frag em menos de um minuto</p>
-        <h2 id="como-jogar-titulo">Como jogar</h2>
+        <p class="eyebrow" data-i18n="how.eyebrow">Primeiro frag em menos de um minuto</p>
+        <h2 id="como-jogar-titulo" data-i18n="how.title">Como jogar</h2>
       </div>
       <ol>
-        <li><strong>Escolha seu nome</strong><span>Ele fica salvo neste navegador.</span></li>
-        <li><strong>Permita o mouse</strong><span>Clique na arena para mirar livremente.</span></li>
-        <li><strong>Entre no servidor</strong><span>O cliente conecta ao servidor brasileiro.</span></li>
+        <li data-i18n="how.1"><strong>Escolha seu nome</strong><span>Ele fica salvo neste navegador.</span></li>
+        <li data-i18n="how.2"><strong>Permita o mouse</strong><span>Clique na arena para mirar livremente.</span></li>
+        <li data-i18n="how.3"><strong>Entre no servidor</strong><span>O cliente conecta ao servidor brasileiro.</span></li>
       </ol>
     </section>
 
     <section class="report" id="reportar" aria-labelledby="reportar-titulo">
       <div>
-        <p class="eyebrow">Achou um bug? Alguém trapaceando?</p>
-        <h2 id="reportar-titulo">Reportar problema</h2>
-        <p class="report-lead">Conte o que aconteceu. A equipe lê todos os relatos.</p>
+        <p class="eyebrow" data-i18n="report.eyebrow">Achou um bug? Alguém trapaceando?</p>
+        <h2 id="reportar-titulo" data-i18n="report.title">Reportar problema</h2>
+        <p class="report-lead" data-i18n="report.lead">Conte o que aconteceu. A equipe lê todos os relatos.</p>
       </div>
       <form class="report-form" data-report-form>
-        <label for="report-kind">Tipo</label>
+        <label for="report-kind" data-i18n="report.kind">Tipo</label>
         <select id="report-kind" name="kind">
-          <option value="bug">Bug / erro no jogo ou no site</option>
-          <option value="conexao">Conexão / lag / mapa não carrega</option>
-          <option value="jogador">Jogador (cheat, ofensa)</option>
-          <option value="sugestao">Sugestão</option>
-          <option value="outro">Outro</option>
+          <option value="bug" data-i18n="report.kind.bug">Bug / erro no jogo ou no site</option>
+          <option value="conexao" data-i18n="report.kind.conexao">Conexão / lag / mapa não carrega</option>
+          <option value="jogador" data-i18n="report.kind.jogador">Jogador (cheat, ofensa)</option>
+          <option value="sugestao" data-i18n="report.kind.sugestao">Sugestão</option>
+          <option value="outro" data-i18n="report.kind.outro">Outro</option>
         </select>
-        <label for="report-nick">Seu nick <span>(opcional)</span></label>
+        <label for="report-nick" data-i18n="report.nick">Seu nick <span>(opcional)</span></label>
         <input id="report-nick" name="nick" type="text" maxlength="32" autocomplete="nickname">
-        <label for="report-message">O que aconteceu?</label>
-        <textarea id="report-message" name="message" rows="5" maxlength="1500" required placeholder="Ex.: no mapa ztndm2 o jogo travou quando peguei o quad…"></textarea>
-        <label for="report-contact">Contato <span>(opcional: Discord, e-mail)</span></label>
+        <label for="report-message" data-i18n="report.message">O que aconteceu?</label>
+        <textarea id="report-message" name="message" rows="5" maxlength="1500" required data-i18n-placeholder="report.placeholder" placeholder="Ex.: no mapa ztndm2 o jogo travou quando peguei o quad…"></textarea>
+        <label for="report-contact" data-i18n="report.contact">Contato <span>(opcional: Discord, e-mail)</span></label>
         <input id="report-contact" name="contact" type="text" maxlength="100">
-        <button type="submit">Enviar relato</button>
+        <button type="submit" data-i18n="report.send">Enviar relato</button>
         <p class="field-note" data-report-note aria-live="polite"></p>
       </form>
     </section>
 
     <section class="project" id="projeto" aria-labelledby="projeto-titulo">
-      <p class="eyebrow">Código aberto, comunidade aberta</p>
-      <h2 id="projeto-titulo">Preservar jogando.</h2>
-      <p>FTE Brazil é um projeto comunitário e não comercial, construído sobre o <a href="https://www.fteqw.org/">FTEQW</a>. Não é afiliado à id Software ou à ZeniMax Media.</p>
-      <a class="text-link" href="https://github.com/tibazera/ftebrazil">Acompanhar o desenvolvimento no GitHub →</a>
+      <p class="eyebrow" data-i18n="project.eyebrow">Código aberto, comunidade aberta</p>
+      <h2 id="projeto-titulo" data-i18n="project.title">Preservar jogando.</h2>
+      <p data-i18n="project.text">FTE Brazil é um projeto comunitário e não comercial, construído sobre o <a href="https://www.fteqw.org/">FTEQW</a>. Não é afiliado à id Software ou à ZeniMax Media.</p>
+      <a class="text-link" href="https://github.com/tibazera/ftebrazil" data-i18n="project.link">Acompanhar o desenvolvimento no GitHub →</a>
     </section>
   </main>
 
   <footer>
-    <span>FTE BRAZIL · FEITO PELA COMUNIDADE</span>
-    <span>QUAKEWORLD DESDE 1996</span>
+    <span data-i18n="footer.made">FTE BRAZIL · FEITO PELA COMUNIDADE</span>
+    <span data-i18n="footer.since">QUAKEWORLD DESDE 1996</span>
   </footer>
 </body>
 </html>

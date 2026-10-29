@@ -16,7 +16,7 @@ const store = {
 nameInput.value = store.get('ftebrazil_player_name');
 
 if (new URLSearchParams(location.search).get('login') === '1') {
-  note.textContent = 'Esse nick é registrado. Digite a senha para entrar com ele.';
+  note.textContent = t('err.login_required');
   note.classList.add('error');
   passwordInput.focus();
 }
@@ -33,7 +33,7 @@ async function postJson(path, body) {
     body: JSON.stringify(body),
   });
   const data = await response.json().catch(() => ({}));
-  if (!response.ok) throw Object.assign(new Error(data.error || 'Servidor de contas indisponível'), { status: response.status });
+  if (!response.ok) throw Object.assign(new Error(data.error ? tApi(data.error) : t('err.accounts')), { status: response.status });
   return data;
 }
 
@@ -41,7 +41,7 @@ form.addEventListener('submit', async event => {
   event.preventDefault();
   const name = cleanPlayerName(nameInput.value);
   if (nameInput.value && !name) {
-    showError('Use letras, números, espaços ou . _ [ ] -');
+    showError(t('err.name'));
     nameInput.focus();
     return;
   }
@@ -53,7 +53,7 @@ form.addEventListener('submit', async event => {
 
   if (password) {
     if (!name) {
-      showError('Escolha um nick para usar senha.');
+      showError(t('err.password_nick'));
       return;
     }
     try {
@@ -83,7 +83,7 @@ function renderRanking(players) {
   if (!players.length) {
     const empty = document.createElement('li');
     empty.className = 'ranking-empty';
-    empty.textContent = 'Ninguém fez frag nesse período ainda. Seja o primeiro.';
+    empty.textContent = t('rank.empty');
     rankingList.append(empty);
     return;
   }
@@ -96,7 +96,7 @@ function renderRanking(players) {
       const mark = document.createElement('span');
       mark.className = 'verified';
       mark.textContent = '✓';
-      mark.title = 'Nick registrado';
+      mark.title = t('rank.mark');
       nick.append(mark);
     }
     const frags = document.createElement('span');
@@ -107,7 +107,10 @@ function renderRanking(players) {
   }
 }
 
+let currentPeriod = 'week';
+
 async function loadRanking(period) {
+  currentPeriod = period;
   for (const button of document.querySelectorAll('[data-period]')) {
     button.setAttribute('aria-pressed', String(button.dataset.period === period));
   }
@@ -116,7 +119,10 @@ async function loadRanking(period) {
     if (!response.ok) throw new Error();
     renderRanking((await response.json()).players);
   } catch {
-    rankingList.innerHTML = '<li class="ranking-empty">Ranking indisponível no momento.</li>';
+    const item = document.createElement('li');
+    item.className = 'ranking-empty';
+    item.textContent = t('rank.error');
+    rankingList.replaceChildren(item);
   }
 }
 
@@ -126,8 +132,8 @@ async function loadOnline() {
     if (!response.ok) return;
     const { players } = await response.json();
     onlineLabel.textContent = players.length === 1
-      ? '1 jogador na arena agora'
-      : `${players.length} jogadores na arena agora`;
+      ? t('online.one')
+      : t('online.many', { n: players.length });
   } catch {}
 }
 
@@ -135,6 +141,12 @@ for (const button of document.querySelectorAll('[data-period]')) {
   button.addEventListener('click', () => loadRanking(button.dataset.period));
 }
 loadRanking('week');
+// Ao trocar de idioma, refaz os textos montados por JS.
+document.addEventListener('languagechange', () => {
+  if (!note.classList.contains('error')) note.textContent = t('join.note');
+  loadRanking(currentPeriod);
+  loadOnline();
+});
 loadOnline();
 setInterval(loadOnline, 15000);
 
@@ -147,7 +159,7 @@ reportForm.addEventListener('submit', async event => {
   const button = reportForm.querySelector('button');
   button.disabled = true;
   reportNote.className = 'field-note';
-  reportNote.textContent = 'Enviando…';
+  reportNote.textContent = t('report.sending');
   try {
     await postJson('api/report', {
       kind: reportForm.kind.value,
@@ -158,7 +170,7 @@ reportForm.addEventListener('submit', async event => {
     });
     reportForm.message.value = '';
     reportNote.classList.add('ok');
-    reportNote.textContent = 'Relato enviado. Valeu por ajudar!';
+    reportNote.textContent = t('report.sent');
   } catch (error) {
     reportNote.classList.add('error');
     reportNote.textContent = error.message;

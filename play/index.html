@@ -9,17 +9,18 @@
 </head>
 <body>
   <main>
-    <a href="../" class="exit" id="exit" hidden>← Sair da arena</a>
+    <a href="../" class="exit" id="exit" hidden data-i18n="play.exit">← Sair da arena</a>
     <canvas id="canvas" aria-label="QuakeWorld"></canvas>
     <section id="loader" class="loader" aria-live="polite">
       <a href="../" class="back">← FTE BRAZIL</a>
       <div class="spinner" aria-hidden="true"></div>
-      <h1>Preparando a arena</h1>
-      <p id="status">Carregando o cliente FTEQW…</p>
+      <h1 data-i18n="play.preparing">Preparando a arena</h1>
+      <p id="status" data-i18n="play.loading">Carregando o cliente FTEQW…</p>
       <progress id="progress" max="100" value="0" hidden></progress>
-      <p class="help">Se esta tela não avançar, o build WebAssembly ainda não foi instalado em <code>vendor/fte/</code>.</p>
+      <p class="help" data-i18n="play.help">Se esta tela não avançar, o build WebAssembly ainda não foi instalado em <code>vendor/fte/</code>.</p>
     </section>
   </main>
+  <script src="../i18n.js?v=15"></script>
   <script src="play.js?v=11"></script>
 </body>
 </html>

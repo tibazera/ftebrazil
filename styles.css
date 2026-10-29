@@ -28,7 +28,7 @@ a { color: inherit; }
 .topbar { min-height: 76px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); }
 .brand { display: flex; align-items: center; gap: .7rem; font-weight: 900; letter-spacing: .18em; text-decoration: none; }
 .brand-mark { padding: .38rem .45rem .3rem; background: var(--yellow); color: var(--dark); letter-spacing: -.06em; clip-path: polygon(8% 0, 100% 0, 92% 100%, 0 100%); }
-nav { display: flex; gap: 1.7rem; font-size: .75rem; text-transform: uppercase; }
+nav { display: flex; align-items: center; gap: 1.7rem; font-size: .75rem; text-transform: uppercase; }
 nav a { color: var(--muted); text-decoration: none; }
 nav a:hover, nav a:focus-visible { color: var(--green); }
 
@@ -87,6 +87,9 @@ input:focus-visible, button:focus-visible, a:focus-visible { outline: 3px solid 
 .cursor { display: inline-block; width: .65rem; height: 1.05rem; vertical-align: middle; background: var(--green); animation: blink 1s steps(2) infinite; }
 @keyframes blink { 50% { opacity: 0; } }
 
+.lang-switch { display: flex; border: 1px solid var(--line); }
+.lang-switch button { min-height: 30px; padding: 0 .55rem; border: 0; background: transparent; color: var(--muted); font-size: .7rem; }
+.lang-switch button[aria-pressed="true"] { background: var(--green); color: var(--dark); }
 .nav-discord { padding: .45rem .8rem; background: #5865f2; color: #fff !important; font-weight: 700; }
 .nav-discord:hover { background: var(--yellow); color: var(--dark) !important; }
 .watch-link { display: flex; align-items: center; justify-content: center; gap: .6rem; min-height: 46px; margin-top: .7rem; border: 1px solid var(--green); color: var(--green); font-size: .8rem; font-weight: 700; text-decoration: none; text-transform: uppercase; }
