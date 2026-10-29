@@ -28,6 +28,9 @@ SECRET = os.environ["FTB_SECRET"].encode()
 DB_PATH = os.environ.get("FTB_DB", "/var/lib/ftebrazil/stats.db")
 HTTP_PORT = int(os.environ.get("FTB_HTTP_PORT", "27600"))
 POLL_SECONDS = float(os.environ.get("FTB_POLL", "3"))
+MAPLIST_PATH = os.environ.get("FTB_MAPLIST", "")
+FRAGLIMIT = int(os.environ.get("FTB_FRAGLIMIT", "100"))
+TIMELIMIT_MIN = float(os.environ.get("FTB_TIMELIMIT", "20"))
 
 OOB = b"\xff\xff\xff\xff"
 NICK_RE = re.compile(r"^[A-Za-z0-9 _.\[\]-]{1,15}$")
@@ -44,6 +47,9 @@ CREATE TABLE IF NOT EXISTS accounts (key TEXT PRIMARY KEY, nick TEXT NOT NULL,
 """)
 
 online = []          # último snapshot de jogadores
+current_map = ""     # mapa atual, lido via rcon
+map_started = time.time()
+changing_map_until = 0.0
 last_frags = {}      # userid -> frags na última leitura
 verified = {}        # userid -> nick já conferido
 
@@ -124,6 +130,49 @@ def enforce_nick(player):
         rcon(f"kick {player['userid']} Nick registrado. Entre pelo site com sua senha.")
 
 
+def load_maplist():
+    if not MAPLIST_PATH:
+        return []
+    try:
+        with open(MAPLIST_PATH) as f:
+            return [line.split("//")[0].strip().lower() for line in f if line.split("//")[0].strip()]
+    except OSError:
+        return []
+
+
+def read_mapname():
+    m = re.search(r'"host_mapname" is "([^"]*)"', COLOR_RE.sub("", rcon("host_mapname")))
+    return m.group(1).lower() if m else ""
+
+
+def rotate(players):
+    """Troca de mapa ao bater o limite de frags ou de tempo (o progs fica sem limite)."""
+    global current_map, map_started, changing_map_until
+    maps = load_maplist()
+    if not maps or not RCON_PASSWORD or time.time() < changing_map_until:
+        return
+    name = read_mapname()
+    if not name:
+        return
+    if name != current_map:
+        current_map, map_started = name, time.time()
+    if name not in maps:
+        target = maps[0]
+    else:
+        top = max(players, key=lambda p: p["frags"], default=None)
+        hit_frags = top is not None and top["frags"] >= FRAGLIMIT
+        hit_time = players and TIMELIMIT_MIN > 0 and time.time() - map_started >= TIMELIMIT_MIN * 60
+        if not (hit_frags or hit_time):
+            return
+        target = maps[(maps.index(name) + 1) % len(maps)]
+        if hit_frags:
+            rcon(f"say {top['name']} venceu {name} com {top['frags']} frags! Proximo: {target}")
+        else:
+            rcon(f"say Tempo esgotado em {name}. Proximo: {target}")
+    rcon(f"changelevel {target}")
+    changing_map_until = time.time() + 15  # espera o mapa novo subir antes de olhar de novo
+
+
 def poll_once():
     global online
     players = read_status()
@@ -149,6 +198,7 @@ def poll_once():
         with db_lock, db:
             db.executemany("INSERT INTO frags (nick, ts, n) VALUES (?, ?, ?)", gained)
     online = [{"name": p["name"], "frags": p["frags"], "ping": p["ping"]} for p in players]
+    rotate(players)
 
 
 def poller():
@@ -193,7 +243,7 @@ class Api(BaseHTTPRequestHandler):
                 limit = 50
             return self.send_json(200, {"period": period, "players": ranking(days, limit)})
         if url.path == "/api/online":
-            return self.send_json(200, {"players": online})
+            return self.send_json(200, {"players": online, "map": current_map, "fraglimit": FRAGLIMIT})
         self.send_json(404, {"error": "não encontrado"})
 
     def do_POST(self):

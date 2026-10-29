@@ -3,3 +3,5 @@ Thumbs.db
 vendor/fte/*.js
 vendor/fte/*.wasm
 !vendor/fte/README.md
+__pycache__/
+*.pyc

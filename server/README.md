@@ -50,6 +50,19 @@ O `deploy-site.sh` também instala o serviço `ftebrazil-stats`
 Segredos ficam em `/etc/ftebrazil/stats.env` (gerado uma vez). Logs:
 `journalctl -u ftebrazil-stats -f`.
 
+## Rotação FFA Brasil
+
+```bash
+./setup-ffa.sh
+```
+
+Extrai os mapas de `FFA Maps BRASIL.rar` para `/opt/ftebrazil/id1/maps`, gera
+`id1/ffa.cfg` (fraglimit 100, timelimit 20) com a ordem de
+`server/maps/ffa-brasil.txt` e reinicia o servidor. Com o `qwprogs.dat` do nQuake
+(`QWPROGS=/caminho` para indicar outro) roda em deathmatch 3, com armas que nunca
+somem, e a rotação é nativa (`localinfo`). Sem ele, o `ftebrazil-stats` faz a
+troca de mapa. Para mudar os limites: `FRAGLIMIT=50 TIMELIMIT=15 ./setup-ffa.sh`.
+
 ## 1. VPS
 
 Qualquer Linux em São Paulo serve (Vultr, AWS `sa-east-1`, Oracle Cloud, Magalu
