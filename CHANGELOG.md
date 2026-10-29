@@ -5,6 +5,11 @@ Todas as mudanças relevantes do FTE Brazil. Formato baseado em
 
 ## [Não lançado]
 
+### Corrigido
+- Tela preta no navegador: a página do jogo agora explica o motivo (navegador sem
+  WebGL, erro ao carregar o engine ou placa de vídeo que parou de responder) e
+  sugere o que fazer, em vez de ficar em branco.
+
 ## [0.2.0] - 2026-10-29
 
 ### Adicionado

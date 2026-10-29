@@ -57,6 +57,11 @@ const I18N = {
     'play.preparing': 'Preparing the arena', 'play.loading': 'Loading the FTEQW client…',
     'play.help': 'If this screen does not move on, the WebAssembly build is not installed in <code>vendor/fte/</code> yet.',
     'play.missing': 'FTEQW client not installed yet.', 'play.exit': '← Leave the arena',
+    "play.problem": "Could not start the game",
+    "play.nowebgl": "Your browser has no WebGL (hardware acceleration is off or the graphics card is not supported).",
+    "play.crash": "The game hit an error while loading.",
+    "play.gpu_lost": "The graphics card stopped responding to the browser.",
+    "play.problem.help": "Try: turn on hardware acceleration in the browser settings, update Chrome/Edge/Firefox, close other heavy tabs. If it keeps happening, use “Report a problem” on the site with this text.",
   },
   es: {
     'meta.title': 'FTE Brazil — QuakeWorld en el navegador',
@@ -113,6 +118,11 @@ const I18N = {
     'play.preparing': 'Preparando la arena', 'play.loading': 'Cargando el cliente FTEQW…',
     'play.help': 'Si esta pantalla no avanza, el build WebAssembly todavía no está instalado en <code>vendor/fte/</code>.',
     'play.missing': 'Cliente FTEQW todavía no instalado.', 'play.exit': '← Salir de la arena',
+    "play.problem": "No se pudo abrir el juego",
+    "play.nowebgl": "Tu navegador no tiene WebGL (aceleración por hardware desactivada o tarjeta de video sin soporte).",
+    "play.crash": "El juego encontró un error al cargar.",
+    "play.gpu_lost": "La tarjeta de video dejó de responder al navegador.",
+    "play.problem.help": "Prueba: activar la aceleración por hardware en la configuración del navegador, actualizar Chrome/Edge/Firefox, cerrar otras pestañas pesadas. Si sigue pasando, usa “Reportar problema” en el sitio con este texto.",
   },
 };
 
@@ -129,6 +139,11 @@ const I18N_PT = {
   'err.login_required': 'Esse nick é registrado. Digite a senha para entrar com ele.',
   'err.accounts': 'Servidor de contas indisponível',
   'play.missing': 'Cliente FTEQW ainda não instalado.',
+  "play.problem": "Não deu para abrir o jogo",
+  "play.nowebgl": "Seu navegador está sem WebGL (aceleração de hardware desligada ou placa de vídeo sem suporte).",
+  "play.crash": "O jogo encontrou um erro ao carregar.",
+  "play.gpu_lost": "A placa de vídeo parou de responder ao navegador.",
+  "play.problem.help": "Tente: ativar a aceleração de hardware nas configurações do navegador, atualizar o Chrome/Edge/Firefox, fechar outras abas pesadas. Se continuar, use “Reportar problema” no site com este texto.",
 };
 
 const LANGS = { pt: 'pt-BR', en: 'en', es: 'es' };

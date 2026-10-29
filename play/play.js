@@ -23,6 +23,25 @@ function showGame() {
   syncExit();
 }
 
+// Em vez de tela preta, mostra o motivo quando o jogo não consegue rodar.
+function showProblem(key, detail = '') {
+  loader.hidden = false;
+  exitLink.hidden = true;
+  document.querySelector('.spinner').hidden = true;
+  document.querySelector('#loader h1').textContent = t('play.problem');
+  status.textContent = t(key) + (detail ? ` (${detail})` : '');
+  document.querySelector('.help').innerHTML = t('play.problem.help');
+  console.error('[FTE Brazil]', key, detail);
+}
+
+const probe = document.createElement('canvas');
+const hasWebGL = !!(probe.getContext('webgl2') || probe.getContext('webgl'));
+window.addEventListener('error', event => {
+  // Só erros do engine enquanto carrega; erro de extensão do navegador não derruba a tela.
+  if (!loader.hidden && /ftewebgl/.test(event.filename || '')) showProblem('play.crash', event.message);
+});
+canvas.addEventListener('webglcontextlost', () => showProblem('play.gpu_lost'));
+
 // Com o mouse preso no jogo o botão some; ESC solta o mouse e o botão volta.
 function syncExit() {
   exitLink.hidden = !loader.hidden || document.pointerLockElement === canvas;
@@ -54,6 +73,7 @@ window.Module = {
   ],
   print: console.log,
   printErr: console.error,
+  onAbort: reason => showProblem('play.crash', String(reason ?? '')),
   setStatus(message) {
     // 'Running...' (e depois '') é o último status do Emscripten antes do jogo começar.
     if (!message || message.startsWith('Running')) return showGame();
@@ -83,7 +103,9 @@ engine.onerror = () => {
   status.textContent = t('play.missing');
   document.querySelector('.spinner').hidden = true;
 };
-nickAllowed().then(allowed => {
-  if (allowed) document.head.append(engine);
+// Começa depois do i18n.js aplicar o idioma, para ele não sobrescrever as mensagens.
+document.addEventListener('DOMContentLoaded', () => nickAllowed().then(allowed => {
+  if (!hasWebGL) showProblem('play.nowebgl');
+  else if (allowed) document.head.append(engine);
   else location.replace('../?login=1');
-});
+}));
