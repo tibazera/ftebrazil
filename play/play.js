@@ -6,6 +6,7 @@ const progress = document.querySelector('#progress');
 // Também aceita ?server=wss://... na URL para testes.
 const DEFAULT_SERVER = 'wss://quake.qlash.com.br';
 const params = new URLSearchParams(location.search);
+const spectate = params.get('spectate') === '1';
 const server = (params.get('server') || DEFAULT_SERVER).trim();
 let token = '';
 try { token = localStorage.getItem('ftebrazil_token') || ''; } catch {}
@@ -43,6 +44,8 @@ window.Module = {
     '+bind', 'd', '+moveright',
     '+bind', 'mouse2', '+jump',
     ...(playerName ? ['+set', 'name', playerName] : []),
+    // Espectador: entra no servidor só para assistir (não ocupa vaga nem conta no ranking).
+    '+setinfo', 'spectator', spectate ? '1' : '0',
     // Chave com "_" fica só no servidor; o serviço de ranking confere o token do nick registrado.
     ...(/^[0-9a-f]{24}$/.test(token) ? ['+setinfo', '_ftb', token] : []),
     ...(/^wss?:\/\//.test(server) ? ['+connect', server] : ['+map', 'start']),

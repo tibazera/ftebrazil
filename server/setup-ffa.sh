@@ -54,6 +54,7 @@ CFG="$QUAKE_DIR/id1/ffa.cfg"
   echo "samelevel 0"
   echo "allow_download 1"
   echo "allow_download_maps 1"
+  echo "maxspectators 16"
 } > "$CFG"
 if [[ -n "$QWPROGS" && -f "$QWPROGS" ]]; then
   install -m644 -o quake -g quake "$QWPROGS" "$QUAKE_DIR/id1/qwprogs.dat"

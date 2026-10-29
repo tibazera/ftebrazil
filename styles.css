@@ -89,6 +89,9 @@ input:focus-visible, button:focus-visible, a:focus-visible { outline: 3px solid 
 
 .nav-discord { padding: .45rem .8rem; background: #5865f2; color: #fff !important; font-weight: 700; }
 .nav-discord:hover { background: var(--yellow); color: var(--dark) !important; }
+.watch-link { display: flex; align-items: center; justify-content: center; gap: .6rem; min-height: 46px; margin-top: .7rem; border: 1px solid var(--green); color: var(--green); font-size: .8rem; font-weight: 700; text-decoration: none; text-transform: uppercase; }
+.watch-link span { color: var(--muted); font-weight: 400; text-transform: none; }
+.watch-link:hover { background: #12291b; }
 .discord-banner { display: grid; gap: .3rem; margin-top: 1.2rem; padding: .9rem 1rem; border: 1px solid #5865f2; border-left: 6px solid #5865f2; background: rgba(88, 101, 242, .14); text-decoration: none; }
 .discord-banner strong { color: #fff; font-size: .8rem; text-transform: uppercase; letter-spacing: .04em; }
 .discord-banner span { color: #c9cdfb; font-size: .78rem; line-height: 1.5; }
