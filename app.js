@@ -27,7 +27,7 @@ async function postJson(path, body) {
     body: JSON.stringify(body),
   });
   const data = await response.json().catch(() => ({}));
-  if (!response.ok) throw new Error(data.error || 'Servidor de contas indisponível');
+  if (!response.ok) throw Object.assign(new Error(data.error || 'Servidor de contas indisponível'), { status: response.status });
   return data;
 }
 
@@ -51,7 +51,14 @@ form.addEventListener('submit', async event => {
       return;
     }
     try {
-      const account = await postJson(registerBox.checked ? 'api/register' : 'api/login', { nick: name, password });
+      let account;
+      try {
+        account = await postJson(registerBox.checked ? 'api/register' : 'api/login', { nick: name, password });
+      } catch (error) {
+        // Nick já registrado com a caixa marcada: tenta entrar com a mesma senha.
+        if (!registerBox.checked || error.status !== 409) throw error;
+        account = await postJson('api/login', { nick: name, password });
+      }
       store.set('ftebrazil_token', account.token);
       store.set('ftebrazil_token_nick', account.nick);
     } catch (error) {
