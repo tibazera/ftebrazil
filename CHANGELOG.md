@@ -6,6 +6,8 @@ Todas as mudanças relevantes do FTE Brazil. Formato baseado em
 ## [Não lançado]
 
 ### Adicionado
+- Janela "Ao vivo" na página inicial: mapa atual e quem está jogando agora
+  (nick, frags e ping), atualizada a cada 5 segundos, com botão para assistir.
 - Login lembrado: depois de entrar com nick e senha, o site mostra "Conectado como
   <nick>" e não pede a senha de novo neste navegador; botão "Sair" esquece a chave.
   No Chrome/Edge, o navegador também oferece salvar a senha.

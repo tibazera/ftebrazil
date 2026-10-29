@@ -179,14 +179,14 @@ def read_mapname():
 def rotate(players):
     """Troca de mapa ao bater o limite de frags ou de tempo (o progs fica sem limite)."""
     global current_map, map_started, changing_map_until
-    maps = load_maplist()
-    if not maps or not RCON_PASSWORD or time.time() < changing_map_until:
-        return
-    name = read_mapname()
+    name = read_mapname() if RCON_PASSWORD else ""
     if not name:
         return
     if name != current_map:
-        current_map, map_started = name, time.time()
+        current_map, map_started = name, time.time()  # também alimenta a janela "Ao vivo" do site
+    maps = load_maplist()
+    if not maps or time.time() < changing_map_until:
+        return
     if name not in maps:
         target = maps[0]
     else:

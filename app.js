@@ -158,15 +158,50 @@ async function loadRanking(period) {
   }
 }
 
+const liveList = document.querySelector('[data-live-list]');
+const liveMap = document.querySelector('[data-live-map]');
+
+function renderLive(players, map) {
+  liveMap.textContent = map ? map.toUpperCase() : '—';
+  liveList.replaceChildren();
+  if (!players.length) {
+    const empty = document.createElement('li');
+    empty.className = 'live-empty';
+    empty.textContent = t('live.empty');
+    liveList.append(empty);
+    return;
+  }
+  for (const player of [...players].sort((a, b) => b.frags - a.frags)) {
+    const item = document.createElement('li');
+    const nick = document.createElement('span');
+    nick.className = 'nick';
+    nick.textContent = player.name;
+    const frags = document.createElement('span');
+    frags.className = 'frags';
+    frags.textContent = player.frags;
+    const ping = document.createElement('span');
+    ping.className = 'ping';
+    ping.textContent = `${player.ping} ms`;
+    item.append(nick, frags, ping);
+    liveList.append(item);
+  }
+}
+
 async function loadOnline() {
   try {
     const response = await fetch('api/online');
-    if (!response.ok) return;
-    const { players } = await response.json();
+    if (!response.ok) throw new Error();
+    const { players, map } = await response.json();
+    renderLive(players, map);
     onlineLabel.textContent = players.length === 1
       ? t('online.one')
       : t('online.many', { n: players.length });
-  } catch {}
+  } catch {
+    const item = document.createElement('li');
+    item.className = 'live-empty';
+    item.textContent = t('live.error');
+    liveList.replaceChildren(item);
+  }
 }
 
 for (const button of document.querySelectorAll('[data-period]')) {
@@ -180,7 +215,7 @@ document.addEventListener('languagechange', () => {
   loadOnline();
 });
 loadOnline();
-setInterval(loadOnline, 15000);
+setInterval(loadOnline, 5000);
 
 const reportForm = document.querySelector('[data-report-form]');
 const reportNote = document.querySelector('[data-report-note]');

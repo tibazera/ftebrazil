@@ -6,9 +6,9 @@
   <meta name="theme-color" content="#07140e">
   <meta name="description" content="Jogue QuakeWorld direto no navegador com a comunidade brasileira.">
   <title data-i18n="meta.title">FTE Brazil — QuakeWorld no navegador</title>
-  <link rel="stylesheet" href="styles.css?v=17">
-  <script src="i18n.js?v=17" defer></script>
-  <script src="app.js?v=17" defer></script>
+  <link rel="stylesheet" href="styles.css?v=18">
+  <script src="i18n.js?v=18" defer></script>
+  <script src="app.js?v=18" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#conteudo" data-i18n="skip">Pular para o conteúdo</a>
@@ -63,6 +63,14 @@
         </form>
       </div>
 
+      <div class="hero-side">
+      <section class="terminal live" aria-labelledby="live-titulo">
+        <div class="terminal-head"><h2 id="live-titulo"><span class="live-dot" aria-hidden="true"></span> <span data-i18n="live.title">AO VIVO</span></h2><span data-live-map>—</span></div>
+        <ol class="live-list" data-live-list>
+          <li class="live-empty" data-i18n="live.loading">Carregando…</li>
+        </ol>
+        <a class="live-watch" href="play/?spectate=1" data-i18n="live.watch">▶ Assistir agora</a>
+      </section>
       <section class="terminal ranking" id="ranking" aria-labelledby="ranking-titulo">
         <div class="terminal-head"><h2 id="ranking-titulo">RANKING // FRAGS</h2><span>BR-SAO</span></div>
         <div class="tabs" role="group" aria-label="Período" data-i18n-aria-label="rank.period">
@@ -75,6 +83,7 @@
         </ol>
         <div class="terminal-foot"><span data-i18n="rank.registered">✓ NICK REGISTRADO</span><span>TOP 20</span></div>
       </section>
+      </div>
     </section>
 
     <section class="community" id="comunidade" aria-labelledby="comunidade-titulo">

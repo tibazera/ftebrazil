@@ -15,6 +15,8 @@ const I18N = {
     'join.password': 'Password <span>(optional, protects your nick in the ranking)</span>',
     'join.register': 'Register this nick now',
     'join.logged': 'Logged in as', 'join.logout': 'Log out',
+    'live.title': 'LIVE', 'live.loading': 'Loading…', 'live.watch': '▶ Watch now',
+    'live.empty': 'Nobody playing right now. Be the first!', 'live.error': 'Live info unavailable right now.',
     'join.watch': '▶ Watch live <span>without joining the match</span>',
     'join.discord': '<strong>South American QuakeWorld Community</strong><span>Welcome! Learn more and play competitive on our Discord →</span>',
     'join.note': 'Recent Chrome, Edge or Firefox · keyboard and mouse recommended',
@@ -77,6 +79,8 @@ const I18N = {
     'join.password': 'Contraseña <span>(opcional, protege tu nick en el ranking)</span>',
     'join.register': 'Registrar este nick ahora',
     'join.logged': 'Conectado como', 'join.logout': 'Salir',
+    'live.title': 'EN VIVO', 'live.loading': 'Cargando…', 'live.watch': '▶ Ver ahora',
+    'live.empty': 'Nadie jugando ahora. ¡Sé el primero!', 'live.error': 'Información en vivo no disponible ahora.',
     'join.watch': '▶ Ver en vivo <span>sin entrar a la partida</span>',
     'join.discord': '<strong>Comunidad Sudamericana de QuakeWorld</strong><span>¡Bienvenido! Aprende más y juega competitivo en nuestro Discord →</span>',
     'join.note': 'Chrome, Edge o Firefox reciente · teclado y mouse recomendados',
@@ -130,6 +134,7 @@ const I18N = {
 
 // Textos em português usados só pelo JS (o HTML já traz o português).
 const I18N_PT = {
+  'live.empty': 'Ninguém jogando agora. Seja o primeiro!', 'live.error': 'Informação ao vivo indisponível agora.',
   'join.note': 'Chrome, Edge ou Firefox recente · teclado e mouse recomendados',
   'rank.empty': 'Ninguém fez frag nesse período ainda. Seja o primeiro.',
   'rank.error': 'Ranking indisponível no momento.',

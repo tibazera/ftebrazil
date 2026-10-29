@@ -59,12 +59,23 @@ input:focus-visible, button:focus-visible, a:focus-visible { outline: 3px solid 
 .check { display: flex !important; align-items: center; gap: .5rem; margin-top: .7rem; color: var(--muted) !important; font-weight: 400 !important; text-transform: none !important; cursor: pointer; }
 .check input { min-height: 0; flex: none; width: 1rem; height: 1rem; accent-color: var(--green); }
 
+.hero-side { display: grid; gap: 2rem; }
+.live .terminal-head h2 { display: flex; align-items: center; gap: .5rem; font: inherit; letter-spacing: inherit; }
+.live-dot { width: .55rem; height: .55rem; border-radius: 50%; background: var(--red); box-shadow: 0 0 10px var(--red); animation: blink 1.4s steps(2) infinite; }
+.live-list { max-height: 260px; overflow-y: auto; margin: 0; padding: .3rem 1.2rem; list-style: none; }
+.live-list li { display: grid; grid-template-columns: 1fr auto auto; gap: 1rem; padding: .55rem 0; border-bottom: 1px solid #12291b; font-size: .82rem; }
+.live-list .nick { overflow-wrap: anywhere; font-weight: 700; }
+.live-list .frags { color: var(--ink); font-variant-numeric: tabular-nums; }
+.live-list .ping { color: var(--muted); font-size: .72rem; font-variant-numeric: tabular-nums; }
+.live-list .live-empty { display: block; padding: 1rem 0; border: 0; color: var(--muted); }
+.live-watch { display: block; padding: .7rem 1rem; border-top: 1px solid var(--line); background: #12291b; color: var(--green); font-size: .72rem; font-weight: 700; text-align: center; text-decoration: none; text-transform: uppercase; }
+.live-watch:hover { background: var(--green); color: var(--dark); }
 .ranking .terminal-head h2 { font: inherit; letter-spacing: inherit; }
 .tabs { display: flex; border-bottom: 1px solid var(--line); }
 .tabs button { flex: 1; min-height: 40px; border: 0; border-right: 1px solid var(--line); background: transparent; color: var(--muted); font-size: .72rem; }
 .tabs button:last-child { border-right: 0; }
 .tabs button[aria-pressed="true"] { background: var(--green); color: var(--dark); }
-.ranking-list { min-height: 410px; margin: 0; padding: .4rem 1.2rem; list-style: none; counter-reset: pos; }
+.ranking-list { min-height: 260px; margin: 0; padding: .4rem 1.2rem; list-style: none; counter-reset: pos; }
 .ranking-list li { display: grid; grid-template-columns: 3rem 1fr auto; align-items: center; gap: 1rem; padding: .7rem 0; border-bottom: 1px solid #12291b; counter-increment: pos; font-size: .85rem; }
 .ranking-list li::before { content: counter(pos, decimal-leading-zero); color: var(--yellow); font-weight: 700; }
 .ranking-list li:nth-child(-n+3) .nick { color: var(--green); }
@@ -150,5 +161,5 @@ footer { display: flex; justify-content: space-between; gap: 1rem; padding: 1.5r
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .cursor { animation: none; }
+  .cursor, .live-dot { animation: none; }
 }
