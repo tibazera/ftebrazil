@@ -35,6 +35,21 @@ Na primeira vez instala o Emscripten e compila o engine web (demora alguns
 minutos). Depois de cada `git pull`, rode de novo para atualizar o site. O nginx
 manda requisições de WebSocket para o `fteqw-sv` e o resto para os arquivos.
 
+## Ranking e nicks registrados
+
+O `deploy-site.sh` também instala o serviço `ftebrazil-stats`
+(`server/stats/ftebrazil_stats.py`, só Python padrão):
+
+- consulta o `fteqw-sv` a cada 3 s e soma os frags de cada nick em
+  `/var/lib/ftebrazil/stats.db`;
+- expõe `/api/ranking?period=day|week|all`, `/api/online`, `/api/register` e
+  `/api/login` pelo nginx;
+- nick registrado ganha um token que o site envia ao jogo (`setinfo _ftb`);
+  quem entra com nick registrado sem o token é expulso via rcon.
+
+Segredos ficam em `/etc/ftebrazil/stats.env` (gerado uma vez). Logs:
+`journalctl -u ftebrazil-stats -f`.
+
 ## 1. VPS
 
 Qualquer Linux em São Paulo serve (Vultr, AWS `sa-east-1`, Oracle Cloud, Magalu

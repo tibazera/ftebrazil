@@ -6,8 +6,8 @@
   <meta name="theme-color" content="#07140e">
   <meta name="description" content="Jogue QuakeWorld direto no navegador com a comunidade brasileira.">
   <title>FTE Brazil — QuakeWorld no navegador</title>
-  <link rel="stylesheet" href="styles.css">
-  <script src="app.js" defer></script>
+  <link rel="stylesheet" href="styles.css?v=5">
+  <script src="app.js?v=5" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
@@ -17,6 +17,7 @@
       <span>BRAZIL</span>
     </a>
     <nav aria-label="Principal">
+      <a href="#ranking">Ranking</a>
       <a href="#como-jogar">Como jogar</a>
       <a href="#projeto">Projeto</a>
       <a href="https://github.com/tibazera/ftebrazil">GitHub</a>
@@ -26,16 +27,19 @@
   <main id="conteudo">
     <section class="hero" aria-labelledby="titulo">
       <div class="hero-copy">
-        <p class="eyebrow"><span class="status-dot"></span> servidor brasileiro em preparação</p>
+        <p class="eyebrow"><span class="status-dot"></span> <span data-online>servidor brasileiro · São Paulo</span></p>
         <h1 id="titulo">A arena<br>voltou.</h1>
         <p class="lead">QuakeWorld de verdade, direto no navegador. Sem instalar, sem enrolação — escolha seu nome e entre na partida.</p>
 
         <form class="join" action="play/" method="get" data-join-form>
           <label for="player-name">Seu nome na arena</label>
           <div class="join-row">
-            <input id="player-name" name="name" type="text" maxlength="15" autocomplete="nickname" placeholder="PLAYER" pattern="[A-Za-z0-9 _.\[\]-]{1,15}" title="Use até 15 letras, números, espaços ou . _ [ ] -">
+            <input id="player-name" name="name" type="text" maxlength="15" autocomplete="username" placeholder="PLAYER" pattern="[A-Za-z0-9 _.\[\]-]{1,15}" title="Use até 15 letras, números, espaços ou . _ [ ] -">
             <button type="submit">Entrar no jogo <span aria-hidden="true">→</span></button>
           </div>
+          <label for="player-password" class="secondary-label">Senha <span>(opcional, protege seu nick no ranking)</span></label>
+          <input id="player-password" type="password" maxlength="128" autocomplete="current-password" placeholder="••••••">
+          <label class="check"><input type="checkbox" data-register> Registrar este nick agora</label>
           <p class="field-note" data-form-note>Chrome, Edge ou Firefox recente · teclado e mouse recomendados</p>
         </form>
       </div>
@@ -43,9 +47,9 @@
       <div class="terminal" aria-label="Prévia do servidor">
         <div class="terminal-head"><span>FTEBRAZIL // CONSOLE</span><span>BR-SAO</span></div>
         <div class="terminal-screen">
-          <p><span class="prompt">]</span> connect arena.ftebrazil</p>
-          <p class="muted">Resolving Brazilian relay...</p>
-          <p class="ok">Projeto iniciado. Servidor aguardando configuração.</p>
+          <p><span class="prompt">]</span> connect quake.qlash.com.br</p>
+          <p class="muted">Conectando ao servidor de São Paulo...</p>
+          <p class="ok">Servidor online. Boa caçada.</p>
           <div class="map-grid" aria-hidden="true">
             <span></span><span></span><span></span><span></span><span></span><span></span>
           </div>
@@ -53,6 +57,24 @@
         </div>
         <div class="terminal-foot"><span>F1 AJUDA</span><span>ESC MENU</span><span>ALT+ENTER TELA CHEIA</span></div>
       </div>
+    </section>
+
+    <section class="ranking" id="ranking" aria-labelledby="ranking-titulo">
+      <div class="ranking-head">
+        <div>
+          <p class="eyebrow">Quem mais faz frag no servidor</p>
+          <h2 id="ranking-titulo">Ranking</h2>
+        </div>
+        <div class="tabs" role="group" aria-label="Período">
+          <button type="button" data-period="day">Hoje</button>
+          <button type="button" data-period="week" aria-pressed="true">Semana</button>
+          <button type="button" data-period="all">Geral</button>
+        </div>
+      </div>
+      <ol class="ranking-list" data-ranking>
+        <li class="ranking-empty">Carregando…</li>
+      </ol>
+      <p class="field-note">✓ = nick registrado com senha. Sem senha, qualquer pessoa pode usar o mesmo nick.</p>
     </section>
 
     <section class="steps" id="como-jogar" aria-labelledby="como-jogar-titulo">

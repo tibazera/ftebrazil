@@ -55,6 +55,52 @@ mkdir -p "$WEB_ROOT"
 rsync -a --delete --exclude .git --exclude .github --exclude server "$REPO_DIR/" "$WEB_ROOT/"
 cp "$ENGINE_CACHE"/* "$WEB_ROOT/vendor/fte/"
 
+echo "==> Ranking (ftebrazil-stats)"
+install -d -m755 /opt/ftebrazil-stats
+install -m755 "$REPO_DIR/server/stats/ftebrazil_stats.py" /opt/ftebrazil-stats/
+install -d -m750 /etc/ftebrazil
+if [[ ! -f /etc/ftebrazil/stats.env ]]; then
+  # Gerados uma vez: segredo dos tokens de nick e senha de rcon local.
+  cat > /etc/ftebrazil/stats.env <<ENV
+FTB_SECRET=$(head -c 32 /dev/urandom | od -An -tx1 | tr -d ' \n')
+RCON_PASSWORD=$(head -c 16 /dev/urandom | od -An -tx1 | tr -d ' \n')
+QW_ADDR=127.0.0.1:27500
+ENV
+  chmod 600 /etc/ftebrazil/stats.env
+fi
+# shellcheck disable=SC1091
+RCON_PASSWORD="$(. /etc/ftebrazil/stats.env; echo "$RCON_PASSWORD")"
+QW_CFG_DIR=/opt/ftebrazil/id1
+if [[ -d $QW_CFG_DIR ]]; then
+  echo "rcon_password \"$RCON_PASSWORD\"" > "$QW_CFG_DIR/rcon.cfg"
+  chown quake:quake "$QW_CFG_DIR/rcon.cfg" 2>/dev/null || true
+  chmod 600 "$QW_CFG_DIR/rcon.cfg"
+  grep -q "exec rcon.cfg" "$QW_CFG_DIR/server.cfg" || sed -i '1i exec rcon.cfg' "$QW_CFG_DIR/server.cfg"
+  systemctl restart ftebrazil || true
+fi
+cat > /etc/systemd/system/ftebrazil-stats.service <<UNIT
+[Unit]
+Description=FTE Brazil ranking e contas
+After=network-online.target ftebrazil.service
+
+[Service]
+EnvironmentFile=/etc/ftebrazil/stats.env
+Environment=FTB_DB=/var/lib/ftebrazil/stats.db
+ExecStart=/usr/bin/python3 /opt/ftebrazil-stats/ftebrazil_stats.py
+DynamicUser=yes
+StateDirectory=ftebrazil
+Restart=always
+RestartSec=3
+NoNewPrivileges=true
+ProtectSystem=strict
+
+[Install]
+WantedBy=multi-user.target
+UNIT
+systemctl daemon-reload
+systemctl enable ftebrazil-stats >/dev/null 2>&1
+systemctl restart ftebrazil-stats
+
 echo "==> nginx"
 CERT="/etc/letsencrypt/live/$DOMAIN"
 if [[ -f "$CERT/fullchain.pem" ]]; then
@@ -76,6 +122,11 @@ server {
 
     gzip on;
     gzip_types application/javascript application/wasm text/css;
+
+    location /api/ {
+        proxy_pass http://127.0.0.1:27600;
+        proxy_set_header Host \$host;
+    }
 
     location / {
         # O cliente do jogo abre wss://$DOMAIN; o resto é o site.

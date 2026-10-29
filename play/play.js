@@ -7,6 +7,8 @@ const progress = document.querySelector('#progress');
 const DEFAULT_SERVER = 'wss://quake.qlash.com.br';
 const params = new URLSearchParams(location.search);
 const server = (params.get('server') || DEFAULT_SERVER).trim();
+let token = '';
+try { token = localStorage.getItem('ftebrazil_token') || ''; } catch {}
 const playerName = params.get('name')?.replace(/[^A-Za-z0-9 _.\[\]-]/g, '').trim().slice(0, 15);
 
 function showGame() {
@@ -28,6 +30,8 @@ window.Module = {
     '+bind', 'd', '+moveright',
     '+bind', 'mouse2', '+jump',
     ...(playerName ? ['+set', 'name', playerName] : []),
+    // Chave com "_" fica só no servidor; o serviço de ranking confere o token do nick registrado.
+    ...(/^[0-9a-f]{24}$/.test(token) ? ['+setinfo', '_ftb', token] : []),
     ...(/^wss?:\/\//.test(server) ? ['+connect', server] : ['+map', 'start']),
   ],
   print: console.log,
