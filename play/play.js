@@ -16,6 +16,16 @@ const token = storage('ftebrazil_token');
 const playerName = storage('ftebrazil_player_name').replace(/[^A-Za-z0-9 _.\[\]-]/g, '').trim().slice(0, 15);
 
 const exitLink = document.querySelector('#exit');
+
+// O FTE grava o config.cfg no localStorage do site quando roda "cfg_save".
+const hasSavedConfig = (() => {
+  try { return Object.keys(localStorage).some(key => /(^|\/)(fte|config)\.cfg$/i.test(key)); } catch { return false; }
+})();
+
+function saveConfig() {
+  if (spectate) return;
+  try { window.FTEC?.cbufadd?.('cfg_save\n'); } catch {}
+}
 document.body.classList.toggle('embed', embed);
 
 function showGame() {
@@ -51,21 +61,38 @@ function syncExit() {
 }
 document.addEventListener('pointerlockchange', syncExit);
 
+// Fechar a aba não passa pelo menu do Quake: salva a config periodicamente,
+// ao trocar de aba e antes de sair pelo botão.
+setInterval(saveConfig, 60000);
+document.addEventListener('visibilitychange', () => { if (document.hidden) saveConfig(); });
+exitLink.addEventListener('click', event => {
+  if (spectate) return;
+  event.preventDefault();
+  saveConfig();
+  setTimeout(() => { location.href = exitLink.href; }, 400); // dá um frame para o engine gravar
+});
+
 window.Module = {
   canvas,
   // "quit" no menu do jogo volta para o site em vez de fechar a aba.
   quiturl: '../',
   arguments: [
     '-manifest', '../game/ftebrazil.fmf',
-    // Sem vsync o FTE agenda frames com setTimeout em vez de requestAnimationFrame,
-    // que prende o jogo na taxa do monitor; cl_maxfps segura em 120.
-    '+set', 'vid_vsync', '0',
-    '+set', 'cl_maxfps', '120',
-    '+bind', 'w', '+forward',
-    '+bind', 's', '+back',
-    '+bind', 'a', '+moveleft',
-    '+bind', 'd', '+moveright',
-    '+bind', 'mouse2', '+jump',
+    // Padrões do site só na primeira vez: depois vale o config.cfg salvo pela pessoa.
+    ...(hasSavedConfig ? [] : [
+      // Sem vsync o FTE agenda frames com setTimeout em vez de requestAnimationFrame,
+      // que prende o jogo na taxa do monitor; cl_maxfps segura em 120.
+      '+set', 'vid_vsync', '0',
+      '+set', 'cl_maxfps', '120',
+      '+bind', 'w', '+forward',
+      '+bind', 's', '+back',
+      '+bind', 'a', '+moveleft',
+      '+bind', 'd', '+moveright',
+      '+bind', 'mouse2', '+jump',
+    ]),
+    // Quem joga salva sensibilidade, volume, binds etc. a cada troca de mapa;
+    // o modo assistir não salva (o volume mudo da transmissão não vai para a config).
+    '+set', 'cfg_save_auto', spectate ? '0' : '1',
     ...(playerName ? ['+set', 'name', playerName] : []),
     // Espectador: entra no servidor só para assistir (não ocupa vaga nem conta no ranking).
     '+setinfo', 'spectator', spectate ? '1' : '0',

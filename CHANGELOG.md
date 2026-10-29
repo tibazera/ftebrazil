@@ -20,6 +20,10 @@ Todas as mudanças relevantes do FTE Brazil. Formato baseado em
   "So Paulo" no hub, porque a fonte do Quake não tem acentos).
 
 ### Corrigido
+- Configurações do jogador agora ficam salvas no navegador (sensibilidade, volume,
+  binds etc.): `cfg_save_auto 1` salva a cada troca de mapa, e o site também salva a
+  cada minuto, ao trocar de aba e ao clicar em "Sair da arena". Os padrões do site
+  (WASD, 120 fps) só são aplicados na primeira vez. O modo assistir não salva nada.
 - Modo assistir é só para assistir: o comando `join` fica desativado nele, e quem
   ainda assim entrar na partida vindo da janela de assistir (`_watch 1`) é expulso
   pelo `ftebrazil-stats`.
