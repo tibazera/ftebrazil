@@ -11,13 +11,24 @@ let token = '';
 try { token = localStorage.getItem('ftebrazil_token') || ''; } catch {}
 const playerName = params.get('name')?.replace(/[^A-Za-z0-9 _.\[\]-]/g, '').trim().slice(0, 15);
 
+const exitLink = document.querySelector('#exit');
+
 function showGame() {
   loader.hidden = true;
   canvas.focus();
+  syncExit();
 }
+
+// Com o mouse preso no jogo o botão some; ESC solta o mouse e o botão volta.
+function syncExit() {
+  exitLink.hidden = !loader.hidden || document.pointerLockElement === canvas;
+}
+document.addEventListener('pointerlockchange', syncExit);
 
 window.Module = {
   canvas,
+  // "quit" no menu do jogo volta para o site em vez de fechar a aba.
+  quiturl: '../',
   arguments: [
     '-manifest', '../game/ftebrazil.fmf',
     // Sem vsync o FTE agenda frames com setTimeout em vez de requestAnimationFrame,
