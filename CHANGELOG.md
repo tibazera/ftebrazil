@@ -15,7 +15,15 @@ Todas as mudanças relevantes do FTE Brazil. Formato baseado em
   <nick>" e não pede a senha de novo neste navegador; botão "Sair" esquece a chave.
   No Chrome/Edge, o navegador também oferece salvar a senha.
 
+### Alterado
+- Nome do servidor: "FFA - Quake Brasil Qlash" (o antigo "São Paulo" aparecia como
+  "So Paulo" no hub, porque a fonte do Quake não tem acentos).
+
 ### Corrigido
+- QTV e WebQTV no hub.quakeworld.nu: o `fteqw-sv` bloqueava streams
+  (`qtv_maxstreams 0`); agora aceita até 16, e o `ftebrazil-stats` mantém um stream
+  local anunciando `1@<domínio>:27500`, que é o que o hub usa para mostrar os botões
+  e conectar pelo relay dele. Requer a porta 27500/tcp liberada.
 - Tela preta no navegador: a página do jogo agora explica o motivo (navegador sem
   WebGL, erro ao carregar o engine ou placa de vídeo que parou de responder) e
   sugere o que fazer, em vez de ficar em branco.

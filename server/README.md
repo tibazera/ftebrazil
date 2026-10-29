@@ -50,6 +50,13 @@ O `deploy-site.sh` também instala o serviço `ftebrazil-stats`
 Segredos ficam em `/etc/ftebrazil/stats.env` (gerado uma vez). Logs:
 `journalctl -u ftebrazil-stats -f`.
 
+## QTV e hub.quakeworld.nu
+
+O `deploy-site.sh` libera QTV no `fteqw-sv` (`qtv_maxstreams 16`,
+`net_enable_qtv 1`) e configura o `ftebrazil-stats` para manter um stream local
+anunciando `1@<domínio>:27500`. O hub lê isso pela api.quake.world e mostra os
+botões QTV/WebQTV. Libere **27500/tcp** no firewall do provedor (Security Group).
+
 ## Relatos de problemas
 
 A seção "Reportar problema" do site grava em `stats.db`. Para ler:

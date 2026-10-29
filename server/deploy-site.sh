@@ -68,6 +68,10 @@ QW_ADDR=127.0.0.1:27500
 ENV
   chmod 600 /etc/ftebrazil/stats.env
 fi
+# Endereço QTV anunciado ao hub (o ftebrazil-stats mantém o stream aberto).
+sed -i '/^FTB_QTV_ADDRESS=/d' /etc/ftebrazil/stats.env
+echo "FTB_QTV_ADDRESS=$DOMAIN:27500" >> /etc/ftebrazil/stats.env
+if command -v ufw &>/dev/null && ufw status | grep -q active; then ufw allow 27500/tcp >/dev/null; fi
 # shellcheck disable=SC1091
 RCON_PASSWORD="$(. /etc/ftebrazil/stats.env; echo "$RCON_PASSWORD")"
 QW_CFG_DIR=/opt/ftebrazil/id1
@@ -76,6 +80,9 @@ if [[ -d $QW_CFG_DIR ]]; then
     echo "rcon_password \"$RCON_PASSWORD\""
     # Clientes baixam mapas por HTTPS do site (bem mais rápido que pela conexão do jogo).
     echo "serverinfo sv_dlURL \"https://$DOMAIN/dl\""
+    # QTV: libera streams (o padrão 0 bloqueia) e aceita o relay do hub.quakeworld.nu.
+    echo "net_enable_qtv 1"
+    echo "qtv_maxstreams 16"
   } > "$QW_CFG_DIR/rcon.cfg"
   chown quake:quake "$QW_CFG_DIR/rcon.cfg" 2>/dev/null || true
   chmod 600 "$QW_CFG_DIR/rcon.cfg"

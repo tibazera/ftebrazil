@@ -31,6 +31,8 @@ HTTP_PORT = int(os.environ.get("FTB_HTTP_PORT", "27600"))
 DISCORD_WEBHOOK = os.environ.get("FTB_DISCORD_WEBHOOK", "")
 REPORT_KINDS = {"bug": "Bug / erro", "jogador": "Jogador (cheat, ofensa)", "conexao": "Conexão / lag",
                 "sugestao": "Sugestão", "outro": "Outro"}
+QTV_ADDRESS = os.environ.get("FTB_QTV_ADDRESS", "")  # endereço público anunciado, ex.: host:27500
+QTV_NAME = os.environ.get("FTB_QTV_NAME", "FFA - Quake Brasil Qlash")
 POLL_SECONDS = float(os.environ.get("FTB_POLL", "3"))
 MAPLIST_PATH = os.environ.get("FTB_MAPLIST", "")
 FRAGLIMIT = int(os.environ.get("FTB_FRAGLIMIT", "100"))
@@ -286,6 +288,26 @@ def save_report(ip, body):
     return 200, {"ok": True}
 
 
+def qtv_announcer():
+    """Mantém um stream QTV local aberto para o servidor se listar no "status 32".
+
+    O FTE só lista streams com proxy conectado; o hub.quakeworld.nu usa essa lista
+    (via api.quake.world) para mostrar QTV/WebQTV e conecta no endereço anunciado.
+    """
+    userinfo = f"\\name\\{QTV_NAME}\\streamid\\1\\address\\{QTV_ADDRESS}"
+    request = f'QTV\nVERSION: 1\nRAW: 1\nUSERINFO: "{userinfo}"\n\n'.encode("latin-1")
+    while True:
+        try:
+            with socket.create_connection((QW_HOST, QW_PORT), timeout=10) as s:
+                s.sendall(request)
+                s.settimeout(120)
+                while s.recv(65536):
+                    pass  # descarta o MVD; só a conexão importa
+        except OSError:
+            pass
+        time.sleep(5)
+
+
 class Api(BaseHTTPRequestHandler):
     server_version = "ftebrazil-stats"
 
@@ -365,4 +387,6 @@ class Api(BaseHTTPRequestHandler):
 
 if __name__ == "__main__":
     threading.Thread(target=poller, daemon=True).start()
+    if QTV_ADDRESS:
+        threading.Thread(target=qtv_announcer, daemon=True).start()
     ThreadingHTTPServer(("127.0.0.1", HTTP_PORT), Api).serve_forever()

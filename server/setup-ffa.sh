@@ -15,6 +15,7 @@ RAR="$REPO_DIR/FFA Maps BRASIL.rar"
 MAPLIST="$REPO_DIR/server/maps/ffa-brasil.txt"
 FRAGLIMIT="${FRAGLIMIT:-100}"
 TIMELIMIT="${TIMELIMIT:-20}"
+HOSTNAME_QW="${HOSTNAME_QW:-FFA - Quake Brasil Qlash}"  # só ASCII: a fonte do Quake não tem acentos
 
 if [[ $EUID -ne 0 ]]; then echo "Rode como root" >&2; exit 1; fi
 [[ -f "$RAR" ]] || { echo "Não achei $RAR (git pull na branch com o arquivo)" >&2; exit 1; }
@@ -49,6 +50,7 @@ fi
 CFG="$QUAKE_DIR/id1/ffa.cfg"
 {
   echo "// Gerado por server/setup-ffa.sh. Não edite: rode o script de novo."
+  echo "hostname \"$HOSTNAME_QW\""
   echo "fraglimit $FRAGLIMIT"
   echo "timelimit $TIMELIMIT"
   echo "samelevel 0"
