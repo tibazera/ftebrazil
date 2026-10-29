@@ -3,8 +3,9 @@
 # Uso: ./setup-ffa.sh            (rode depois do install.sh e do deploy-site.sh)
 #
 # - extrai os .bsp de "FFA Maps BRASIL.rar" (raiz do repositório) em id1/maps;
-# - usa o qwprogs.dat do nQuake (QWPROGS=/caminho para outro) para ter
-#   deathmatch 3: armas nunca somem e itens/armaduras voltam;
+# - baixa o qwprogs.dat oficial da id Software (GPL, repositório id-Software/Quake)
+#   só para /opt/ftebrazil, para ter deathmatch 3: armas nunca somem e
+#   itens/armaduras voltam. Outros servidores da máquina não são tocados;
 # - cria id1/ffa.cfg com fraglimit 100 e a rotação via localinfo.
 set -euo pipefail
 
@@ -37,7 +38,14 @@ done
 echo "    ${#MAPS[@]} mapas na rotação"
 
 echo "==> qwprogs.dat"
-QWPROGS="${QWPROGS:-$(find /root/nquakesv /home -path '*/qw/qwprogs.dat' 2>/dev/null | head -n1 || true)}"
+QWPROGS_URL="https://raw.githubusercontent.com/id-Software/Quake/bf4ac424ce754894ac8f1dae6a3981954bc9852d/qw-qc/qwprogs.dat"
+QWPROGS_SHA256="ff51cb5e77360d72b93487d89198dcf94629b92f8bae100fc6ea48a6c12a7830"
+if [[ -z "${QWPROGS:-}" ]]; then
+  QWPROGS="$TMP/qwprogs.dat"
+  if ! curl -fsSL -o "$QWPROGS" "$QWPROGS_URL" || ! echo "$QWPROGS_SHA256  $QWPROGS" | sha256sum -c --quiet -; then
+    QWPROGS=""
+  fi
+fi
 CFG="$QUAKE_DIR/id1/ffa.cfg"
 {
   echo "// Gerado por server/setup-ffa.sh. Não edite: rode o script de novo."

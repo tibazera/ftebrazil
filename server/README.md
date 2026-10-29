@@ -58,10 +58,10 @@ Segredos ficam em `/etc/ftebrazil/stats.env` (gerado uma vez). Logs:
 
 Extrai os mapas de `FFA Maps BRASIL.rar` para `/opt/ftebrazil/id1/maps`, gera
 `id1/ffa.cfg` (fraglimit 100, timelimit 20) com a ordem de
-`server/maps/ffa-brasil.txt` e reinicia o servidor. Com o `qwprogs.dat` do nQuake
-(`QWPROGS=/caminho` para indicar outro) roda em deathmatch 3, com armas que nunca
-somem, e a rotação é nativa (`localinfo`). Sem ele, o `ftebrazil-stats` faz a
-troca de mapa. Para mudar os limites: `FRAGLIMIT=50 TIMELIMIT=15 ./setup-ffa.sh`.
+`server/maps/ffa-brasil.txt` e reinicia o servidor. Baixa o `qwprogs.dat` oficial do QuakeWorld
+(id-Software/Quake, GPL, conferido por sha256) só para `/opt/ftebrazil`: roda em
+deathmatch 3, com armas que nunca somem, e a rotação é nativa (`localinfo`). Se o
+download falhar, o `ftebrazil-stats` faz a troca de mapa. Para mudar os limites: `FRAGLIMIT=50 TIMELIMIT=15 ./setup-ffa.sh`.
 
 ## 1. VPS
 
