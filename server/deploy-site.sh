@@ -72,7 +72,11 @@ fi
 RCON_PASSWORD="$(. /etc/ftebrazil/stats.env; echo "$RCON_PASSWORD")"
 QW_CFG_DIR=/opt/ftebrazil/id1
 if [[ -d $QW_CFG_DIR ]]; then
-  echo "rcon_password \"$RCON_PASSWORD\"" > "$QW_CFG_DIR/rcon.cfg"
+  {
+    echo "rcon_password \"$RCON_PASSWORD\""
+    # Clientes baixam mapas por HTTPS do site (bem mais rápido que pela conexão do jogo).
+    echo "serverinfo sv_dlURL \"https://$DOMAIN/dl\""
+  } > "$QW_CFG_DIR/rcon.cfg"
   chown quake:quake "$QW_CFG_DIR/rcon.cfg" 2>/dev/null || true
   chmod 600 "$QW_CFG_DIR/rcon.cfg"
   grep -q "exec rcon.cfg" "$QW_CFG_DIR/server.cfg" || sed -i '1i exec rcon.cfg' "$QW_CFG_DIR/server.cfg"
@@ -122,6 +126,13 @@ server {
 
     gzip on;
     gzip_types application/javascript application/wasm text/css;
+
+    # Só a pasta de mapas: o resto de /opt/ftebrazil (cfgs com senha) não é servido.
+    location ~ ^/dl/(id1|qw)/maps/([A-Za-z0-9_+.-]+\.bsp)\$ {
+        alias /opt/ftebrazil/id1/maps/\$2;
+        add_header Access-Control-Allow-Origin *;
+        expires 7d;
+    }
 
     location /api/ {
         proxy_pass http://127.0.0.1:27600;
