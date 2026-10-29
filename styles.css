@@ -87,6 +87,16 @@ input:focus-visible, button:focus-visible, a:focus-visible { outline: 3px solid 
 .cursor { display: inline-block; width: .65rem; height: 1.05rem; vertical-align: middle; background: var(--green); animation: blink 1s steps(2) infinite; }
 @keyframes blink { 50% { opacity: 0; } }
 
+.nav-discord { padding: .45rem .8rem; background: #5865f2; color: #fff !important; font-weight: 700; }
+.nav-discord:hover { background: var(--yellow); color: var(--dark) !important; }
+.discord-banner { display: grid; gap: .3rem; margin-top: 1.2rem; padding: .9rem 1rem; border: 1px solid #5865f2; border-left: 6px solid #5865f2; background: rgba(88, 101, 242, .14); text-decoration: none; }
+.discord-banner strong { color: #fff; font-size: .8rem; text-transform: uppercase; letter-spacing: .04em; }
+.discord-banner span { color: #c9cdfb; font-size: .78rem; line-height: 1.5; }
+.discord-banner:hover { background: rgba(88, 101, 242, .3); }
+.community { display: grid; grid-template-columns: .8fr 1.2fr; gap: 4rem; align-items: end; border-top: 1px solid var(--line); padding: 90px 0; }
+.community p:not(.eyebrow) { max-width: 38rem; margin: 0 0 1.6rem; color: var(--muted); line-height: 1.7; }
+.discord-button { display: inline-flex; align-items: center; gap: .6rem; min-height: 52px; padding: 0 1.4rem; background: #5865f2; color: #fff; font-weight: 700; text-decoration: none; text-transform: uppercase; }
+.discord-button:hover { background: var(--yellow); color: var(--dark); }
 .steps, .project { border-top: 1px solid var(--line); padding: 90px 0; }
 .steps { display: grid; grid-template-columns: .8fr 1.2fr; gap: 4rem; }
 h2 { font-size: clamp(3rem, 7vw, 6rem); }
@@ -101,12 +111,12 @@ h2 { font-size: clamp(3rem, 7vw, 6rem); }
 footer { display: flex; justify-content: space-between; gap: 1rem; padding: 1.5rem 0 2.5rem; border-top: 1px solid var(--line); color: var(--muted); font-size: .65rem; }
 
 @media (max-width: 800px) {
-  .topbar nav a:not(:last-child) { display: none; }
-  .hero, .steps { grid-template-columns: 1fr; }
+  .topbar nav a:not(:last-child):not(.nav-discord) { display: none; }
+  .hero, .steps, .community { grid-template-columns: 1fr; }
   .hero { padding-top: 50px; }
   .terminal { transform: none; box-shadow: 10px 10px 0 #12291b; }
   .terminal-screen { min-height: 320px; }
-  .steps { gap: 2rem; }
+  .steps, .community { gap: 2rem; }
 }
 @media (max-width: 520px) {
   .topbar, main, footer { width: min(100% - 24px, 1180px); }
