@@ -187,7 +187,11 @@ class Api(BaseHTTPRequestHandler):
         if url.path == "/api/ranking":
             period = parse_qs(url.query).get("period", ["week"])[0]
             days = {"day": 1, "week": 7, "month": 30, "all": 0}.get(period, 7)
-            return self.send_json(200, {"period": period, "players": ranking(days)})
+            try:
+                limit = max(1, min(int(parse_qs(url.query).get("limit", ["50"])[0]), 100))
+            except ValueError:
+                limit = 50
+            return self.send_json(200, {"period": period, "players": ranking(days, limit)})
         if url.path == "/api/online":
             return self.send_json(200, {"players": online})
         self.send_json(404, {"error": "não encontrado"})

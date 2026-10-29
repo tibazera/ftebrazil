@@ -6,8 +6,8 @@
   <meta name="theme-color" content="#07140e">
   <meta name="description" content="Jogue QuakeWorld direto no navegador com a comunidade brasileira.">
   <title>FTE Brazil — QuakeWorld no navegador</title>
-  <link rel="stylesheet" href="styles.css?v=5">
-  <script src="app.js?v=5" defer></script>
+  <link rel="stylesheet" href="styles.css?v=7">
+  <script src="app.js?v=7" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
@@ -44,37 +44,18 @@
         </form>
       </div>
 
-      <div class="terminal" aria-label="Prévia do servidor">
-        <div class="terminal-head"><span>FTEBRAZIL // CONSOLE</span><span>BR-SAO</span></div>
-        <div class="terminal-screen">
-          <p><span class="prompt">]</span> connect quake.qlash.com.br</p>
-          <p class="muted">Conectando ao servidor de São Paulo...</p>
-          <p class="ok">Servidor online. Boa caçada.</p>
-          <div class="map-grid" aria-hidden="true">
-            <span></span><span></span><span></span><span></span><span></span><span></span>
-          </div>
-          <p class="cursor-line"><span class="prompt">]</span> <span class="cursor"></span></p>
-        </div>
-        <div class="terminal-foot"><span>F1 AJUDA</span><span>ESC MENU</span><span>ALT+ENTER TELA CHEIA</span></div>
-      </div>
-    </section>
-
-    <section class="ranking" id="ranking" aria-labelledby="ranking-titulo">
-      <div class="ranking-head">
-        <div>
-          <p class="eyebrow">Quem mais faz frag no servidor</p>
-          <h2 id="ranking-titulo">Ranking</h2>
-        </div>
+      <section class="terminal ranking" id="ranking" aria-labelledby="ranking-titulo">
+        <div class="terminal-head"><h2 id="ranking-titulo">RANKING // FRAGS</h2><span>BR-SAO</span></div>
         <div class="tabs" role="group" aria-label="Período">
           <button type="button" data-period="day">Hoje</button>
           <button type="button" data-period="week" aria-pressed="true">Semana</button>
           <button type="button" data-period="all">Geral</button>
         </div>
-      </div>
-      <ol class="ranking-list" data-ranking>
-        <li class="ranking-empty">Carregando…</li>
-      </ol>
-      <p class="field-note">✓ = nick registrado com senha. Sem senha, qualquer pessoa pode usar o mesmo nick.</p>
+        <ol class="ranking-list" data-ranking>
+          <li class="ranking-empty">Carregando…</li>
+        </ol>
+        <div class="terminal-foot"><span>✓ NICK REGISTRADO</span><span>TOP 10</span></div>
+      </section>
     </section>
 
     <section class="steps" id="como-jogar" aria-labelledby="como-jogar-titulo">

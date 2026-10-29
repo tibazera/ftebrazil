@@ -54,19 +54,19 @@ input:focus-visible, button:focus-visible, a:focus-visible { outline: 3px solid 
 .check { display: flex !important; align-items: center; gap: .5rem; margin-top: .7rem; color: var(--muted) !important; font-weight: 400 !important; text-transform: none !important; cursor: pointer; }
 .check input { min-height: 0; flex: none; width: 1rem; height: 1rem; accent-color: var(--green); }
 
-.ranking { border-top: 1px solid var(--line); padding: 90px 0; }
-.ranking-head { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 1.5rem; margin-bottom: 2rem; }
-.tabs { display: flex; }
-.tabs button { min-height: 40px; background: transparent; color: var(--muted); }
+.ranking .terminal-head h2 { font: inherit; letter-spacing: inherit; }
+.tabs { display: flex; border-bottom: 1px solid var(--line); }
+.tabs button { flex: 1; min-height: 40px; border: 0; border-right: 1px solid var(--line); background: transparent; color: var(--muted); font-size: .72rem; }
+.tabs button:last-child { border-right: 0; }
 .tabs button[aria-pressed="true"] { background: var(--green); color: var(--dark); }
-.ranking-list { margin: 0; padding: 0; list-style: none; counter-reset: pos; }
-.ranking-list li { display: grid; grid-template-columns: 3rem 1fr auto; align-items: center; gap: 1rem; padding: .9rem 0; border-bottom: 1px solid var(--line); counter-increment: pos; }
+.ranking-list { min-height: 410px; margin: 0; padding: .4rem 1.2rem; list-style: none; counter-reset: pos; }
+.ranking-list li { display: grid; grid-template-columns: 3rem 1fr auto; align-items: center; gap: 1rem; padding: .7rem 0; border-bottom: 1px solid #12291b; counter-increment: pos; font-size: .85rem; }
 .ranking-list li::before { content: counter(pos, decimal-leading-zero); color: var(--yellow); font-weight: 700; }
 .ranking-list li:nth-child(-n+3) .nick { color: var(--green); }
 .ranking-list .nick { overflow-wrap: anywhere; font-weight: 700; }
 .ranking-list .verified { margin-left: .4rem; color: var(--green); font-size: .75rem; }
 .ranking-list .frags { color: var(--ink); font-variant-numeric: tabular-nums; }
-.ranking-list .ranking-empty { display: block; color: var(--muted); }
+.ranking-list .ranking-empty { display: block; padding-top: 1.5rem; border: 0; color: var(--muted); }
 .ranking-list .ranking-empty::before { content: none; }
 
 .terminal { border: 1px solid #355540; background: #030a06; box-shadow: 18px 18px 0 #12291b, 18px 18px 0 1px #31563c; transform: perspective(1000px) rotateY(-2deg); }
