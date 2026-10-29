@@ -98,7 +98,7 @@ async function loadRanking(period) {
     button.setAttribute('aria-pressed', String(button.dataset.period === period));
   }
   try {
-    const response = await fetch(`api/ranking?period=${period}&limit=10`);
+    const response = await fetch(`api/ranking?period=${period}&limit=20`);
     if (!response.ok) throw new Error();
     renderRanking((await response.json()).players);
   } catch {
