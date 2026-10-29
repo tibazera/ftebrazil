@@ -6,9 +6,9 @@
   <meta name="theme-color" content="#07140e">
   <meta name="description" content="Jogue QuakeWorld direto no navegador com a comunidade brasileira.">
   <title data-i18n="meta.title">FTE Brazil — QuakeWorld no navegador</title>
-  <link rel="stylesheet" href="styles.css?v=15">
-  <script src="i18n.js?v=16" defer></script>
-  <script src="app.js?v=15" defer></script>
+  <link rel="stylesheet" href="styles.css?v=17">
+  <script src="i18n.js?v=17" defer></script>
+  <script src="app.js?v=17" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#conteudo" data-i18n="skip">Pular para o conteúdo</a>
@@ -45,9 +45,15 @@
             <input id="player-name" name="name" type="text" maxlength="15" autocomplete="username" placeholder="PLAYER" pattern="[A-Za-z0-9 _.\[\]-]{1,15}" data-i18n-title="join.name.title" title="Use até 15 letras, números, espaços ou . _ [ ] -">
             <button type="submit" data-i18n="join.play">Entrar no jogo <span aria-hidden="true">→</span></button>
           </div>
-          <label for="player-password" class="secondary-label" data-i18n="join.password">Senha <span>(opcional, protege seu nick no ranking)</span></label>
-          <input id="player-password" type="password" maxlength="128" autocomplete="current-password" placeholder="••••••">
-          <label class="check"><input type="checkbox" data-register> <span data-i18n="join.register">Registrar este nick agora</span></label>
+          <p class="session" data-session hidden>
+            <span><span aria-hidden="true">✓</span> <span data-i18n="join.logged">Conectado como</span> <strong data-session-nick></strong></span>
+            <button type="button" data-logout data-i18n="join.logout">Sair</button>
+          </p>
+          <div data-password-fields>
+            <label for="player-password" class="secondary-label" data-i18n="join.password">Senha <span>(opcional, protege seu nick no ranking)</span></label>
+            <input id="player-password" type="password" maxlength="128" autocomplete="current-password" placeholder="••••••">
+            <label class="check"><input type="checkbox" data-register> <span data-i18n="join.register">Registrar este nick agora</span></label>
+          </div>
           <a class="watch-link" href="play/?spectate=1" data-i18n="join.watch">▶ Assistir ao vivo <span>sem entrar na partida</span></a>
           <a class="discord-banner" href="https://discord.gg/nsXpHe2ef9" target="_blank" rel="noopener" data-i18n="join.discord">
             <strong>Comunidade Sul-Americana de QuakeWorld</strong>

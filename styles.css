@@ -51,6 +51,11 @@ input:focus-visible, button:focus-visible, a:focus-visible { outline: 3px solid 
 .join .secondary-label { margin-top: 1rem; }
 .secondary-label span { color: var(--muted); font-weight: 400; text-transform: none; }
 #player-password { width: 100%; text-transform: none; }
+.session { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin: 1rem 0 0; padding: .7rem .9rem; border: 1px solid var(--green); background: rgba(105, 240, 148, .08); color: var(--green); font-size: .78rem; }
+.session strong { color: var(--ink); }
+.session button { min-height: 32px; padding: 0 .8rem; background: transparent; color: var(--muted); font-size: .68rem; }
+.session button:hover { background: #12291b; color: var(--ink); }
+.session[hidden], [data-password-fields][hidden] { display: none; }
 .check { display: flex !important; align-items: center; gap: .5rem; margin-top: .7rem; color: var(--muted) !important; font-weight: 400 !important; text-transform: none !important; cursor: pointer; }
 .check input { min-height: 0; flex: none; width: 1rem; height: 1rem; accent-color: var(--green); }
 

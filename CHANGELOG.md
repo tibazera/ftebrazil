@@ -5,6 +5,11 @@ Todas as mudanças relevantes do FTE Brazil. Formato baseado em
 
 ## [Não lançado]
 
+### Adicionado
+- Login lembrado: depois de entrar com nick e senha, o site mostra "Conectado como
+  <nick>" e não pede a senha de novo neste navegador; botão "Sair" esquece a chave.
+  No Chrome/Edge, o navegador também oferece salvar a senha.
+
 ### Corrigido
 - Tela preta no navegador: a página do jogo agora explica o motivo (navegador sem
   WebGL, erro ao carregar o engine ou placa de vídeo que parou de responder) e

@@ -15,6 +15,37 @@ const store = {
 
 nameInput.value = store.get('ftebrazil_player_name');
 
+const sessionBox = document.querySelector('[data-session]');
+const passwordFields = document.querySelector('[data-password-fields]');
+
+// Com a chave do nick salva neste navegador, não precisa digitar a senha de novo.
+function syncSession() {
+  const name = cleanPlayerName(nameInput.value);
+  const tokenNick = store.get('ftebrazil_token_nick');
+  const logged = !!store.get('ftebrazil_token') && !!name && tokenNick.toLowerCase() === name.toLowerCase();
+  sessionBox.hidden = !logged;
+  passwordFields.hidden = logged;
+  if (logged) sessionBox.querySelector('[data-session-nick]').textContent = tokenNick;
+}
+
+nameInput.addEventListener('input', syncSession);
+document.querySelector('[data-logout]').addEventListener('click', () => {
+  store.set('ftebrazil_token', '');
+  store.set('ftebrazil_token_nick', '');
+  passwordInput.value = '';
+  syncSession();
+  passwordInput.focus();
+});
+syncSession();
+
+// Oferece salvar a senha no gerenciador do navegador (Chrome/Edge).
+async function offerToSavePassword(nick, password) {
+  if (!window.PasswordCredential || !navigator.credentials?.store) return;
+  try {
+    await navigator.credentials.store(new PasswordCredential({ id: nick, password, name: nick }));
+  } catch {}
+}
+
 if (new URLSearchParams(location.search).get('login') === '1') {
   note.textContent = t('err.login_required');
   note.classList.add('error');
@@ -67,6 +98,7 @@ form.addEventListener('submit', async event => {
       }
       store.set('ftebrazil_token', account.token);
       store.set('ftebrazil_token_nick', account.nick);
+      await offerToSavePassword(account.nick, password);
     } catch (error) {
       showError(error.message);
       return;
