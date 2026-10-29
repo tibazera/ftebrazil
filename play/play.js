@@ -18,8 +18,10 @@ window.Module = {
   canvas,
   arguments: [
     '-manifest', '../game/ftebrazil.fmf',
-    '+set', 'vid_hardwaregamma', '2',
-    '+set', 'gamma', '1.05',
+    // Sem vsync o FTE agenda frames com setTimeout em vez de requestAnimationFrame,
+    // que prende o jogo na taxa do monitor; cl_maxfps segura em 120.
+    '+set', 'vid_vsync', '0',
+    '+set', 'cl_maxfps', '120',
     '+bind', 'w', '+forward',
     '+bind', 's', '+back',
     '+bind', 'a', '+moveleft',
