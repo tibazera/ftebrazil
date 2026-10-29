@@ -8,9 +8,10 @@ const DEFAULT_SERVER = 'wss://quake.qlash.com.br';
 const params = new URLSearchParams(location.search);
 const spectate = params.get('spectate') === '1';
 const server = (params.get('server') || DEFAULT_SERVER).trim();
-let token = '';
-try { token = localStorage.getItem('ftebrazil_token') || ''; } catch {}
-const playerName = params.get('name')?.replace(/[^A-Za-z0-9 _.\[\]-]/g, '').trim().slice(0, 15);
+const storage = key => { try { return localStorage.getItem(key) || ''; } catch { return ''; } };
+const token = storage('ftebrazil_token');
+// O nick vem do que a pessoa digitou neste navegador, nunca da URL.
+const playerName = storage('ftebrazil_player_name').replace(/[^A-Za-z0-9 _.\[\]-]/g, '').trim().slice(0, 15);
 
 const exitLink = document.querySelector('#exit');
 
@@ -47,7 +48,8 @@ window.Module = {
     // Espectador: entra no servidor só para assistir (não ocupa vaga nem conta no ranking).
     '+setinfo', 'spectator', spectate ? '1' : '0',
     // Chave com "_" fica só no servidor; o serviço de ranking confere o token do nick registrado.
-    ...(/^[0-9a-f]{24}$/.test(token) ? ['+setinfo', '_ftb', token] : []),
+    // Só o servidor oficial recebe a chave: um ?server= de terceiros não pode capturá-la.
+    ...(/^[0-9a-f]{24}$/.test(token) && server === DEFAULT_SERVER ? ['+setinfo', '_ftb', token] : []),
     ...(/^wss?:\/\//.test(server) ? ['+connect', server] : ['+map', 'start']),
   ],
   print: console.log,
@@ -63,10 +65,25 @@ window.Module = {
   postRun: [showGame],
 };
 
+// Nick registrado sem a chave deste navegador volta para o login antes de conectar.
+async function nickAllowed() {
+  if (!playerName || spectate) return true;
+  if (/^[0-9a-f]{24}$/.test(token) && storage('ftebrazil_token_nick').toLowerCase() === playerName.toLowerCase()) return true;
+  try {
+    const response = await fetch(`../api/nick?nick=${encodeURIComponent(playerName)}`);
+    return !response.ok || !(await response.json()).registered;
+  } catch {
+    return true; // sem API (ex.: GitHub Pages): o servidor ainda expulsa quem não tiver a chave
+  }
+}
+
 const engine = document.createElement('script');
 engine.src = '../vendor/fte/ftewebgl.js';
 engine.onerror = () => {
   status.textContent = 'Cliente FTEQW ainda não instalado.';
   document.querySelector('.spinner').hidden = true;
 };
-document.head.append(engine);
+nickAllowed().then(allowed => {
+  if (allowed) document.head.append(engine);
+  else location.replace('../?login=1');
+});

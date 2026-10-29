@@ -15,6 +15,12 @@ const store = {
 
 nameInput.value = store.get('ftebrazil_player_name');
 
+if (new URLSearchParams(location.search).get('login') === '1') {
+  note.textContent = 'Esse nick é registrado. Digite a senha para entrar com ele.';
+  note.classList.add('error');
+  passwordInput.focus();
+}
+
 function showError(message) {
   note.textContent = message;
   note.classList.add('error');
@@ -68,7 +74,8 @@ form.addEventListener('submit', async event => {
   }
 
   store.set('ftebrazil_player_name', name);
-  location.href = `play/${name ? `?name=${encodeURIComponent(name)}` : ''}`;
+  // O nick não vai na URL: um link compartilhado não leva o nick de ninguém.
+  location.href = 'play/';
 });
 
 function renderRanking(players) {
@@ -130,3 +137,32 @@ for (const button of document.querySelectorAll('[data-period]')) {
 loadRanking('week');
 loadOnline();
 setInterval(loadOnline, 15000);
+
+const reportForm = document.querySelector('[data-report-form]');
+const reportNote = document.querySelector('[data-report-note]');
+reportForm.nick.value = store.get('ftebrazil_player_name');
+
+reportForm.addEventListener('submit', async event => {
+  event.preventDefault();
+  const button = reportForm.querySelector('button');
+  button.disabled = true;
+  reportNote.className = 'field-note';
+  reportNote.textContent = 'Enviando…';
+  try {
+    await postJson('api/report', {
+      kind: reportForm.kind.value,
+      nick: reportForm.nick.value,
+      message: reportForm.message.value,
+      contact: reportForm.contact.value,
+      agent: navigator.userAgent,
+    });
+    reportForm.message.value = '';
+    reportNote.classList.add('ok');
+    reportNote.textContent = 'Relato enviado. Valeu por ajudar!';
+  } catch (error) {
+    reportNote.classList.add('error');
+    reportNote.textContent = error.message;
+  } finally {
+    button.disabled = false;
+  }
+});

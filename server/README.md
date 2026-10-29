@@ -50,6 +50,18 @@ O `deploy-site.sh` também instala o serviço `ftebrazil-stats`
 Segredos ficam em `/etc/ftebrazil/stats.env` (gerado uma vez). Logs:
 `journalctl -u ftebrazil-stats -f`.
 
+## Relatos de problemas
+
+A seção "Reportar problema" do site grava em `stats.db`. Para ler:
+
+```bash
+./server/stats/ver-relatos.sh        # 20 mais recentes
+```
+
+Para receber cada relato num canal do Discord, crie um webhook no canal e
+adicione `FTB_DISCORD_WEBHOOK=<url>` em `/etc/ftebrazil/stats.env`, depois
+`systemctl restart ftebrazil-stats`.
+
 ## Rotação FFA Brasil
 
 ```bash

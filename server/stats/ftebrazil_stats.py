@@ -18,6 +18,7 @@ import socket
 import sqlite3
 import threading
 import time
+import urllib.request
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import parse_qs, urlparse
 
@@ -27,6 +28,9 @@ RCON_PASSWORD = os.environ.get("RCON_PASSWORD", "")
 SECRET = os.environ["FTB_SECRET"].encode()
 DB_PATH = os.environ.get("FTB_DB", "/var/lib/ftebrazil/stats.db")
 HTTP_PORT = int(os.environ.get("FTB_HTTP_PORT", "27600"))
+DISCORD_WEBHOOK = os.environ.get("FTB_DISCORD_WEBHOOK", "")
+REPORT_KINDS = {"bug": "Bug / erro", "jogador": "Jogador (cheat, ofensa)", "conexao": "Conexão / lag",
+                "sugestao": "Sugestão", "outro": "Outro"}
 POLL_SECONDS = float(os.environ.get("FTB_POLL", "3"))
 MAPLIST_PATH = os.environ.get("FTB_MAPLIST", "")
 FRAGLIMIT = int(os.environ.get("FTB_FRAGLIMIT", "100"))
@@ -44,6 +48,8 @@ CREATE TABLE IF NOT EXISTS frags (nick TEXT NOT NULL, ts INTEGER NOT NULL, n INT
 CREATE INDEX IF NOT EXISTS frags_ts ON frags (ts);
 CREATE TABLE IF NOT EXISTS accounts (key TEXT PRIMARY KEY, nick TEXT NOT NULL,
   salt BLOB NOT NULL, hash BLOB NOT NULL, created INTEGER NOT NULL);
+CREATE TABLE IF NOT EXISTS reports (id INTEGER PRIMARY KEY, ts INTEGER NOT NULL, kind TEXT NOT NULL,
+  nick TEXT NOT NULL, message TEXT NOT NULL, contact TEXT NOT NULL, agent TEXT NOT NULL);
 """)
 
 online = []          # último snapshot de jogadores
@@ -245,6 +251,41 @@ def ranking(days, limit=50):
     return [{"nick": n, "frags": t, "registered": nick_key(n) in registered} for n, t in rows]
 
 
+last_report = {}  # ip -> horário do último relato (freio contra spam)
+
+
+def save_report(ip, body):
+    kind = str(body.get("kind", "outro"))
+    kind = kind if kind in REPORT_KINDS else "outro"
+    message = str(body.get("message", "")).strip()[:1500]
+    nick = str(body.get("nick", "")).strip()[:32]
+    contact = str(body.get("contact", "")).strip()[:100]
+    agent = str(body.get("agent", "")).strip()[:200]
+    if len(message) < 5:
+        return 400, {"error": "Descreva o problema (pelo menos algumas palavras)."}
+    now = time.time()
+    if now - last_report.get(ip, 0) < 30:
+        return 429, {"error": "Aguarde alguns segundos antes de enviar outro relato."}
+    last_report[ip] = now
+    with db_lock, db:
+        db.execute("INSERT INTO reports (ts, kind, nick, message, contact, agent) VALUES (?, ?, ?, ?, ?, ?)",
+                   (int(now), kind, nick, message, contact, agent))
+    if DISCORD_WEBHOOK:
+        text = f"**{REPORT_KINDS[kind]}** de `{nick or 'anônimo'}`\n{message}"
+        if contact:
+            text += f"\nContato: {contact}"
+        payload = json.dumps({"content": text[:1900], "allowed_mentions": {"parse": []}}).encode()
+        request = urllib.request.Request(DISCORD_WEBHOOK, data=payload,
+                                         headers={"Content-Type": "application/json", "User-Agent": "ftebrazil"})
+        def send():
+            try:
+                urllib.request.urlopen(request, timeout=10).close()
+            except OSError:
+                pass  # Discord fora do ar não impede o relato de ficar gravado
+        threading.Thread(target=send, daemon=True).start()
+    return 200, {"ok": True}
+
+
 class Api(BaseHTTPRequestHandler):
     server_version = "ftebrazil-stats"
 
@@ -267,13 +308,18 @@ class Api(BaseHTTPRequestHandler):
             except ValueError:
                 limit = 50
             return self.send_json(200, {"period": period, "players": ranking(days, limit)})
+        if url.path == "/api/nick":
+            key = nick_key(parse_qs(url.query).get("nick", [""])[0])
+            with db_lock:
+                registered = db.execute("SELECT 1 FROM accounts WHERE key = ?", (key,)).fetchone() is not None
+            return self.send_json(200, {"registered": registered})
         if url.path == "/api/online":
             return self.send_json(200, {"players": online, "map": current_map, "fraglimit": FRAGLIMIT})
         self.send_json(404, {"error": "não encontrado"})
 
     def do_POST(self):
         length = int(self.headers.get("Content-Length") or 0)
-        if length > 4096:
+        if length > 8192:
             return self.send_json(413, {"error": "requisição grande demais"})
         try:
             body = json.loads(self.rfile.read(length) or b"{}")
@@ -281,6 +327,9 @@ class Api(BaseHTTPRequestHandler):
             password = str(body.get("password", ""))
         except (ValueError, AttributeError):
             return self.send_json(400, {"error": "JSON inválido"})
+        if self.path == "/api/report":
+            ip = (self.headers.get("X-Real-IP") or self.client_address[0]).strip()
+            return self.send_json(*save_report(ip, body))
         if not NICK_RE.match(nick):
             return self.send_json(400, {"error": "Nick: até 15 letras, números, espaço ou . _ [ ] -"})
         if not 6 <= len(password) <= 128:

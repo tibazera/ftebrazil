@@ -6,8 +6,8 @@
   <meta name="theme-color" content="#07140e">
   <meta name="description" content="Jogue QuakeWorld direto no navegador com a comunidade brasileira.">
   <title>FTE Brazil — QuakeWorld no navegador</title>
-  <link rel="stylesheet" href="styles.css?v=13">
-  <script src="app.js?v=13" defer></script>
+  <link rel="stylesheet" href="styles.css?v=14">
+  <script src="app.js?v=14" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
@@ -19,6 +19,7 @@
     <nav aria-label="Principal">
       <a href="#ranking">Ranking</a>
       <a href="#como-jogar">Como jogar</a>
+      <a href="#reportar">Reportar</a>
       <a href="#projeto">Projeto</a>
       <a href="https://github.com/tibazera/ftebrazil">GitHub</a>
       <a class="nav-discord" href="https://discord.gg/nsXpHe2ef9" target="_blank" rel="noopener">Discord</a>
@@ -85,6 +86,32 @@
         <li><strong>Permita o mouse</strong><span>Clique na arena para mirar livremente.</span></li>
         <li><strong>Entre no servidor</strong><span>O cliente conecta ao servidor brasileiro.</span></li>
       </ol>
+    </section>
+
+    <section class="report" id="reportar" aria-labelledby="reportar-titulo">
+      <div>
+        <p class="eyebrow">Achou um bug? Alguém trapaceando?</p>
+        <h2 id="reportar-titulo">Reportar problema</h2>
+        <p class="report-lead">Conte o que aconteceu. A equipe lê todos os relatos.</p>
+      </div>
+      <form class="report-form" data-report-form>
+        <label for="report-kind">Tipo</label>
+        <select id="report-kind" name="kind">
+          <option value="bug">Bug / erro no jogo ou no site</option>
+          <option value="conexao">Conexão / lag / mapa não carrega</option>
+          <option value="jogador">Jogador (cheat, ofensa)</option>
+          <option value="sugestao">Sugestão</option>
+          <option value="outro">Outro</option>
+        </select>
+        <label for="report-nick">Seu nick <span>(opcional)</span></label>
+        <input id="report-nick" name="nick" type="text" maxlength="32" autocomplete="nickname">
+        <label for="report-message">O que aconteceu?</label>
+        <textarea id="report-message" name="message" rows="5" maxlength="1500" required placeholder="Ex.: no mapa ztndm2 o jogo travou quando peguei o quad…"></textarea>
+        <label for="report-contact">Contato <span>(opcional: Discord, e-mail)</span></label>
+        <input id="report-contact" name="contact" type="text" maxlength="100">
+        <button type="submit">Enviar relato</button>
+        <p class="field-note" data-report-note aria-live="polite"></p>
+      </form>
     </section>
 
     <section class="project" id="projeto" aria-labelledby="projeto-titulo">
